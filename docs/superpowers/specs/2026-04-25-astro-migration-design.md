@@ -44,7 +44,7 @@
 | Хостинг | Cloudflare Pages + Cloudflare Pages Functions (на одном домене) | Бесплатно, edge-функции = шлюзы, минимум DNS |
 | Домен | `flathead.is-a.dev` через is-a.dev | Бесплатно, тематично («developer subdomain») |
 | Защита админки | Cloudflare Access (email-OTP) перед `/admin/*` | Второй слой поверх GitHub OAuth |
-| Репозиторий | **Новый GitHub-репозиторий** (имя уточняется в Фазе 0). Текущий `pixed_dev_design` сохраняется как архив Claude Design-результата | Чистая история коммитов миграции, отделение от prototyping-фазы |
+| Репозиторий | **Новый GitHub-репозиторий** (имя уточняется в Фазе 0). Текущий `pixed_dev_design` сохраняется как архив prototyping-фазы | Чистая история коммитов миграции, отделение от prototyping-фазы |
 
 ## 4. Что keep / cut из текущей версии
 
@@ -553,7 +553,7 @@ pnpm lint
 
 ### Фаза 9 — Архивирование старого репозитория (≈1 ч)
 - Перенести нужные ассеты из старого репо `pixed_dev_design` (`assets/avatar.jpg`, подходящие картинки из `uploads/`, спек из `docs/superpowers/specs/`) в новый репо.
-- Старый репозиторий `pixed_dev_design` остаётся как есть (архив Claude Design-итерации). Опционально: переименовать в `pixed_dev_design-legacy` и пометить как archived в GitHub.
+- Старый репозиторий `pixed_dev_design` остаётся как есть (архив prototyping-фазы). Опционально: переименовать в `pixed_dev_design-legacy` и пометить как archived в GitHub.
 - В новом репо в `README.md` упомянуть исходный prototyping-репо.
 
 **Итого:** 7-8 рабочих дней для одного человека, без учёта наполнения контентом.
