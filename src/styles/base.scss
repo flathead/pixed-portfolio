@@ -1,0 +1,71 @@
+// =====================================================================
+// Base styles — reset, typography defaults, scrollbar, utilities.
+// Imported globally via BaseLayout's `<style is:global>`.
+// =====================================================================
+
+@use 'tokens' as *;
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: $text-base;
+  line-height: $leading-normal;
+  image-rendering: pixelated;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+a {
+  color: var(--cyan);
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+    text-shadow: 0 0 8px var(--cyan);
+  }
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--surface);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-bright);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--green);
+}
+
+.container {
+  max-width: $max-width;
+  margin: 0 auto;
+  padding: 0 $space-5;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

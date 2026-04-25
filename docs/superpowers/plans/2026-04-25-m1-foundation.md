@@ -11,6 +11,7 @@
 **Specs:** [`docs/superpowers/specs/2026-04-25-astro-migration-design.md`](../specs/2026-04-25-astro-migration-design.md)
 
 **Locked decisions:**
+
 - GitHub repo: `flathead/pixed-portfolio`
 - Cloudflare Pages project: `pixed-portfolio` → `pixed-portfolio.pages.dev`
 - Custom domain: `flathead.is-a.dev`
@@ -94,6 +95,7 @@ pixed-portfolio/
 - [ ] **Step 1: Создать пустой репозиторий на GitHub**
 
 Открой https://github.com/new и создай репозиторий с параметрами:
+
 - **Repository name:** `pixed-portfolio`
 - **Owner:** `flathead`
 - **Visibility:** Public (нужно для бесплатного Cloudflare Pages + чтобы исходник служил демо)
@@ -110,6 +112,7 @@ cd pixed-portfolio
 ```
 
 Ожидаемый вывод:
+
 ```
 Cloning into 'pixed-portfolio'...
 warning: You appear to have cloned an empty repository.
@@ -132,6 +135,7 @@ git push -u origin main
 ```
 
 Ожидаемый вывод:
+
 ```
 * [new branch]      main -> main
 branch 'main' set up to track 'origin/main'.
@@ -142,6 +146,7 @@ branch 'main' set up to track 'origin/main'.
 ### Task 0.2: Инициализировать Astro-skeleton
 
 **Files:**
+
 - Create: `package.json`, `astro.config.mjs`, `tsconfig.json`, `.gitignore`, `.nvmrc`, `.editorconfig`, `src/pages/index.astro`, `src/env.d.ts`
 
 - [ ] **Step 1: Инициализировать Astro через CLI**
@@ -158,6 +163,7 @@ CLI спросит: «Directory not empty, continue?» → **Yes**.
 - [ ] **Step 2: Зафиксировать версию Node**
 
 Создать `.nvmrc`:
+
 ```
 22
 ```
@@ -182,6 +188,7 @@ trim_trailing_whitespace = false
 - [ ] **Step 4: Дописать `.gitignore`**
 
 Astro создал базовый. Добавить в конец:
+
 ```
 # Local IDE
 .idea/
@@ -208,18 +215,19 @@ Thumbs.db
 ---
 // Health-check page for M1. Will be replaced with HomePage in M2.
 ---
-<!DOCTYPE html>
+
+<!doctype html>
 <html lang="ru">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>pixed-portfolio — M1 OK</title>
-</head>
-<body style="background:#0d0d1a;color:#39ff14;font-family:monospace;padding:40px;">
-  <h1>flathead.is-a.dev — M1 Foundation OK</h1>
-  <p>Astro skeleton deployed. Real homepage lands in M2.</p>
-  <p>Build time: {new Date().toISOString()}</p>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>pixed-portfolio — M1 OK</title>
+  </head>
+  <body style="background:#0d0d1a;color:#39ff14;font-family:monospace;padding:40px;">
+    <h1>flathead.is-a.dev — M1 Foundation OK</h1>
+    <p>Astro skeleton deployed. Real homepage lands in M2.</p>
+    <p>Build time: {new Date().toISOString()}</p>
+  </body>
 </html>
 ```
 
@@ -250,6 +258,7 @@ pnpm dev
 - [ ] **Step 9: Зафиксировать pnpm-версию в `package.json`**
 
 В `package.json` добавить поле `packageManager`:
+
 ```json
 {
   "name": "pixed-portfolio",
@@ -286,14 +295,14 @@ URL: https://dash.cloudflare.com/?to=/:account/workers-and-pages
 
 - [ ] **Step 3: Заполнить настройки билда**
 
-| Поле | Значение |
-|---|---|
-| Project name | `pixed-portfolio` |
-| Production branch | `main` |
-| Framework preset | `Astro` |
-| Build command | `pnpm install && pnpm build` |
-| Build output directory | `dist` |
-| Root directory | (пусто) |
+| Поле                   | Значение                     |
+| ---------------------- | ---------------------------- |
+| Project name           | `pixed-portfolio`            |
+| Production branch      | `main`                       |
+| Framework preset       | `Astro`                      |
+| Build command          | `pnpm install && pnpm build` |
+| Build output directory | `dist`                       |
+| Root directory         | (пусто)                      |
 
 В разделе **Environment variables** добавить:
 | Variable | Value |
@@ -349,11 +358,13 @@ URL: https://dash.cloudflare.com/?to=/:account/workers-and-pages
 - [ ] **Step 4: Создать PR**
 
 Заголовок PR:
+
 ```
 Register flathead.is-a.dev
 ```
 
 Описание PR (заполнить честно — содержимое сайта на момент подачи будет M1 health-check):
+
 ```markdown
 - **Subdomain:** `flathead.is-a.dev`
 - **Use case:** Personal portfolio for a PHP developer
@@ -374,6 +385,7 @@ Maintainers ревьюят PR обычно в течение 24-72 ч. Если 
 - [ ] **Step 6: Проверить DNS**
 
 После merge:
+
 ```bash
 dig +short flathead.is-a.dev CNAME
 ```
@@ -407,6 +419,7 @@ curl -sI https://flathead.is-a.dev/ | head -5
 ```
 
 Ожидаемое:
+
 ```
 HTTP/2 200
 content-type: text/html; charset=utf-8
@@ -429,10 +442,10 @@ URL: https://github.com/settings/developers → **OAuth Apps** → **New OAuth A
 
 - [ ] **Step 2: Заполнить форму**
 
-| Поле | Значение |
-|---|---|
-| Application name | `pixed-portfolio CMS` |
-| Homepage URL | `https://flathead.is-a.dev` |
+| Поле                       | Значение                                      |
+| -------------------------- | --------------------------------------------- |
+| Application name           | `pixed-portfolio CMS`                         |
+| Homepage URL               | `https://flathead.is-a.dev`                   |
 | Authorization callback URL | `https://flathead.is-a.dev/api/auth/callback` |
 
 Кликнуть **Register application**.
@@ -444,6 +457,7 @@ URL: https://github.com/settings/developers → **OAuth Apps** → **New OAuth A
 - [ ] **Step 4: Сохранить секреты в безопасном месте**
 
 Сохранить локально (не в Git!) в защищённом хранилище (1Password / KeePassXC / etc.):
+
 - `GITHUB_CLIENT_ID` — виден на странице App
 - `GITHUB_CLIENT_SECRET` — секрет, только что сгенерированный
 
@@ -469,18 +483,19 @@ Settings → **Authentication** → **Login methods** → **Add new** → **One-
 
 Access → **Applications** → **Add an application** → **Self-hosted**.
 
-| Поле | Значение |
-|---|---|
-| Application name | `pixed-portfolio admin` |
-| Session Duration | `24 hours` |
-| Application domain | `flathead.is-a.dev` |
-| Path | `/admin/*` |
+| Поле               | Значение                |
+| ------------------ | ----------------------- |
+| Application name   | `pixed-portfolio admin` |
+| Session Duration   | `24 hours`              |
+| Application domain | `flathead.is-a.dev`     |
+| Path               | `/admin/*`              |
 
 Кликнуть **Next**.
 
 - [ ] **Step 4: Настроить policy**
 
 Создать policy:
+
 - **Policy name:** `Owner only`
 - **Action:** `Allow`
 - **Configure rules** → **Include** → **Emails** → `basicjispasedbs@outlook.com`
@@ -490,6 +505,7 @@ Access → **Applications** → **Add an application** → **Self-hosted**.
 - [ ] **Step 5: Создать вторую Application для `/api/auth/*`**
 
 Повторить Step 3-4 со значениями:
+
 - **Application name:** `pixed-portfolio auth API`
 - **Path:** `/api/auth/*`
 
@@ -510,6 +526,7 @@ curl -sI https://flathead.is-a.dev/admin/
 ### Task 1.1: Установить runtime-зависимости
 
 **Files:**
+
 - Modify: `package.json`
 
 - [ ] **Step 1: Установить интеграции и библиотеки**
@@ -526,6 +543,7 @@ pnpm add -D vitest @vitest/coverage-v8
 - [ ] **Step 2: Проверить версии в `package.json`**
 
 В `package.json` секция `dependencies` должна содержать:
+
 - `astro`: `^5.x`
 - `@astrojs/svelte`: `^7.x`
 - `@astrojs/mdx`: `^4.x`
@@ -550,6 +568,7 @@ git push
 ### Task 1.2: Сконфигурировать Astro
 
 **Files:**
+
 - Modify: `astro.config.mjs`
 
 - [ ] **Step 1: Перезаписать `astro.config.mjs`**
@@ -611,6 +630,7 @@ git push
 ### Task 1.3: Усилить TypeScript-конфиг
 
 **Files:**
+
 - Modify: `tsconfig.json`
 
 - [ ] **Step 1: Перезаписать `tsconfig.json`**
@@ -655,6 +675,7 @@ git push
 ### Task 1.4: Перенести дизайн-токены в SCSS
 
 **Files:**
+
 - Create: `src/styles/tokens.scss`
 - Reference: текущий `colors_and_type.css` в старом репо `pixed_dev_design`
 
@@ -715,7 +736,7 @@ $shadow-pixel-press: inset 2px 2px 0 #000;
 
 // Layout
 $max-width: 1100px;
-$radius: 0;             // pixel art = no rounded corners
+$radius: 0; // pixel art = no rounded corners
 
 :root {
   // Colors
@@ -766,6 +787,7 @@ git push
 ### Task 1.5: Добавить SCSS-миксины и base-стили
 
 **Files:**
+
 - Create: `src/styles/mixins.scss`
 - Create: `src/styles/base.scss`
 - Create: `src/styles/animations.scss`
@@ -785,7 +807,9 @@ git push
   border: 4px solid $accent;
   box-shadow: $shadow-pixel-md $accent;
   border-radius: $radius;
-  transition: transform 120ms steps(4), box-shadow 120ms steps(4),
+  transition:
+    transform 120ms steps(4),
+    box-shadow 120ms steps(4),
     border-color 120ms steps(4);
 
   &:hover {
@@ -812,10 +836,18 @@ git push
   box-shadow: $shadow-pixel-md $accent;
   cursor: pointer;
   text-decoration: none;
-  transition: transform 120ms steps(4), box-shadow 120ms steps(4);
+  transition:
+    transform 120ms steps(4),
+    box-shadow 120ms steps(4);
 
-  &::before { content: '['; margin-right: $space-2; }
-  &::after  { content: ']'; margin-left: $space-2; }
+  &::before {
+    content: '[';
+    margin-right: $space-2;
+  }
+  &::after {
+    content: ']';
+    margin-left: $space-2;
+  }
 
   &:hover {
     transform: translate(-2px, -2px);
@@ -859,7 +891,9 @@ git push
     opacity: 0;
     transition: opacity 80ms steps(2);
   }
-  &:hover::before { opacity: 1; }
+  &:hover::before {
+    opacity: 1;
+  }
 }
 ```
 
@@ -900,10 +934,18 @@ a {
   }
 }
 
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: var(--surface); }
-::-webkit-scrollbar-thumb { background: var(--border-bright); }
-::-webkit-scrollbar-thumb:hover { background: var(--green); }
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--surface);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-bright);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--green);
+}
 
 // Utility
 .container {
@@ -914,8 +956,10 @@ a {
 
 .sr-only {
   position: absolute;
-  width: 1px; height: 1px;
-  padding: 0; margin: -1px;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
   overflow: hidden;
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
@@ -932,13 +976,24 @@ a {
 // =====================================================================
 
 @keyframes blink {
-  0%, 100% { opacity: 1; }
-  50%      { opacity: 0; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
 }
 
 @keyframes px-enter {
-  from { opacity: 0; transform: translateY(16px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 ```
 
@@ -955,6 +1010,7 @@ git push
 ### Task 1.6: Self-host шрифтов
 
 **Files:**
+
 - Create: `public/fonts/*.woff2` (5 файлов)
 - Create: `src/styles/fonts.scss`
 - Modify: `src/layouts/BaseLayout.astro` (после Task 1.7)
@@ -962,11 +1018,13 @@ git push
 - [ ] **Step 1: Скачать шрифты с Google Fonts (через google-webfonts-helper)**
 
 Открыть https://gwfh.mranftl.com/fonts. Для каждого шрифта:
+
 - **Press Start 2P** (Latin only): regular 400. Скачать `.woff2`.
 - **Tektur** (Cyrillic + Latin): regular 400 и bold 700. Скачать оба `.woff2`.
 - **IBM Plex Mono** (Cyrillic + Latin): regular 400 и italic 400. Скачать оба `.woff2`.
 
 Положить все 5 файлов в `public/fonts/` с понятными именами:
+
 ```
 public/fonts/
 ├── press-start-2p-v15-latin-regular.woff2
@@ -989,9 +1047,9 @@ public/fonts/
   font-weight: 400;
   font-display: swap;
   src: url('/fonts/press-start-2p-v15-latin-regular.woff2') format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6,
-    U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193,
-    U+2212, U+2215, U+FEFF, U+FFFD;
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074,
+    U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
 @font-face {
@@ -1036,9 +1094,7 @@ public/fonts/
 Создать `src/lib/fonts.ts`:
 
 ```ts
-export const PRELOAD_FONTS = [
-  '/fonts/tektur-v3-cyrillic_latin-regular.woff2',
-] as const;
+export const PRELOAD_FONTS = ['/fonts/tektur-v3-cyrillic_latin-regular.woff2'] as const;
 
 export const ALL_FONT_FILES = [
   '/fonts/press-start-2p-v15-latin-regular.woff2',
@@ -1072,6 +1128,7 @@ git push
 ### Task 1.7: Создать BaseLayout
 
 **Files:**
+
 - Create: `src/layouts/BaseLayout.astro`
 
 - [ ] **Step 1: Создать `src/layouts/BaseLayout.astro`**
@@ -1096,7 +1153,8 @@ const {
 
 const canonical = new URL(Astro.url.pathname, Astro.site).toString();
 ---
-<!DOCTYPE html>
+
+<!doctype html>
 <html lang={locale}>
   <head>
     <meta charset="UTF-8" />
@@ -1113,9 +1171,11 @@ const canonical = new URL(Astro.url.pathname, Astro.site).toString();
     <meta property="og:type" content="website" />
     <meta name="twitter:card" content="summary_large_image" />
 
-    {PRELOAD_FONTS.map((href) => (
-      <link rel="preload" href={href} as="font" type="font/woff2" crossorigin="anonymous" />
-    ))}
+    {
+      PRELOAD_FONTS.map((href) => (
+        <link rel="preload" href={href} as="font" type="font/woff2" crossorigin="anonymous" />
+      ))
+    }
 
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
   </head>
@@ -1137,14 +1197,11 @@ const canonical = new URL(Astro.url.pathname, Astro.site).toString();
 ---
 import BaseLayout from '~/layouts/BaseLayout.astro';
 ---
+
 <BaseLayout title="pixed-portfolio — M1 Foundation OK">
   <main class="container" style="padding:80px 0;">
-    <h1 style="font-family:var(--font-display);color:var(--green);">
-      flathead.is-a.dev
-    </h1>
-    <p style="margin-top:24px;color:var(--text);">
-      M1 Foundation OK. Real homepage lands in M2.
-    </p>
+    <h1 style="font-family:var(--font-display);color:var(--green);">flathead.is-a.dev</h1>
+    <p style="margin-top:24px;color:var(--text);">M1 Foundation OK. Real homepage lands in M2.</p>
     <p style="margin-top:8px;color:var(--text-muted);font-family:var(--font-mono);font-size:14px;">
       Build: {new Date().toISOString()}
     </p>
@@ -1175,6 +1232,7 @@ git push
 ### Task 1.8: Создать i18n-хелперы
 
 **Files:**
+
 - Create: `src/lib/i18n.ts`
 - Create: `src/i18n/ru.json`
 - Create: `src/i18n/en.json`
@@ -1207,6 +1265,7 @@ export default defineConfig({
 - [ ] **Step 2: Добавить test-скрипты в `package.json`**
 
 В секцию `scripts` добавить:
+
 ```json
 "scripts": {
   "dev": "astro dev",
@@ -1222,6 +1281,7 @@ export default defineConfig({
 - [ ] **Step 3: Создать заглушки словарей**
 
 `src/i18n/ru.json`:
+
 ```json
 {
   "_meta": {
@@ -1232,6 +1292,7 @@ export default defineConfig({
 ```
 
 `src/i18n/en.json` (пока копия ru, заменим в M2 при заполнении UI-строк):
+
 ```json
 {
   "_meta": {
@@ -1245,13 +1306,7 @@ export default defineConfig({
 
 ```ts
 import { describe, expect, it } from 'vitest';
-import {
-  getLocale,
-  isLocale,
-  localeUrl,
-  t,
-  type Locale,
-} from '~/lib/i18n';
+import { getLocale, isLocale, localeUrl, t, type Locale } from '~/lib/i18n';
 
 describe('isLocale', () => {
   it('returns true for ru and en', () => {
@@ -1406,6 +1461,7 @@ git push
 ### Task 1.9: Подключить Prettier
 
 **Files:**
+
 - Create: `.prettierrc.json`
 - Create: `.prettierignore`
 - Modify: `package.json` (format script)
@@ -1441,6 +1497,7 @@ public/fonts/
 - [ ] **Step 3: Добавить format-скрипты в `package.json`**
 
 В `scripts`:
+
 ```json
 "format": "prettier --write .",
 "format:check": "prettier --check ."
@@ -1474,6 +1531,7 @@ git push
 ### Task 2.1: Создать Zod-схемы коллекций
 
 **Files:**
+
 - Create: `src/content/config.ts`
 
 - [ ] **Step 1: Создать `src/content/config.ts`**
@@ -1569,6 +1627,7 @@ git push
 ### Task 2.2: Перенести проект 1 — «Интернет-магазин спортивного питания»
 
 **Files:**
+
 - Create: `src/content/projects/sport-nutrition/index.mdx`
 - Create: `src/content/projects/sport-nutrition/cover.png` (placeholder)
 - Reference: `../pixed_dev_design/Pages.jsx:5-38` (исходный JSX-объект)
@@ -1584,6 +1643,7 @@ sed -n '5,38p' ../pixed_dev_design/Pages.jsx
 - [ ] **Step 2: Подготовить cover-картинку**
 
 Скопировать первую подходящую картинку из старого репо как заглушку:
+
 ```bash
 mkdir -p src/content/projects/sport-nutrition/screens
 cp ../pixed_dev_design/uploads/photo_2026-04-21_01-52-33.jpg \
@@ -1671,6 +1731,7 @@ git push
 ### Task 2.3: Перенести проект 2 — «CRM для агентства недвижимости»
 
 **Files:**
+
 - Create: `src/content/projects/real-estate-crm/index.mdx`
 - Create: `src/content/projects/real-estate-crm/cover.jpg`
 
@@ -1759,6 +1820,7 @@ git push
 ### Task 2.4: Перенести проект 3 — «Telegram-бот для доставки еды»
 
 **Files:**
+
 - Create: `src/content/projects/food-delivery-bot/index.mdx`
 - Create: `src/content/projects/food-delivery-bot/cover.jpg`
 
@@ -1842,6 +1904,7 @@ git push
 ### Task 2.5: Подключить Git LFS для скриншотов проектов
 
 **Files:**
+
 - Create: `.gitattributes`
 
 > К моменту этой задачи в `src/content/projects/*/` уже лежат cover-jpg. Они мелкие (по 50-200 KB), но в M2 будут добавлены полноразмерные скриншоты — для них LFS обязателен.
@@ -1932,6 +1995,7 @@ git push
 ### Task 2.6: Перенести скиллы в YAML
 
 **Files:**
+
 - Create: `src/content/skills/01-php.yml` ... `src/content/skills/08-git.yml`
 - Reference: `../pixed_dev_design/Pages.jsx:118-127`
 
@@ -1942,16 +2006,17 @@ sed -n '118,127p' ../pixed_dev_design/Pages.jsx
 ```
 
 Ожидаемое (8 объектов):
+
 ```js
 const SKILLS = [
-  {name:'PHP',        value:92, color:'var(--green)'},
-  {name:'Laravel',    value:88, color:'var(--green)'},
-  {name:'MySQL',      value:80, color:'var(--cyan)'},
-  {name:'JavaScript', value:65, color:'var(--yellow)'},
-  {name:'Vue.js',     value:55, color:'var(--yellow)'},
-  {name:'Docker',     value:70, color:'var(--magenta)'},
-  {name:'Linux / CLI',value:78, color:'var(--purple)'},
-  {name:'Git',        value:85, color:'var(--cyan)'},
+  { name: 'PHP', value: 92, color: 'var(--green)' },
+  { name: 'Laravel', value: 88, color: 'var(--green)' },
+  { name: 'MySQL', value: 80, color: 'var(--cyan)' },
+  { name: 'JavaScript', value: 65, color: 'var(--yellow)' },
+  { name: 'Vue.js', value: 55, color: 'var(--yellow)' },
+  { name: 'Docker', value: 70, color: 'var(--magenta)' },
+  { name: 'Linux / CLI', value: 78, color: 'var(--purple)' },
+  { name: 'Git', value: 85, color: 'var(--cyan)' },
 ];
 ```
 
@@ -1962,6 +2027,7 @@ mkdir -p src/content/skills
 ```
 
 `src/content/skills/01-php.yml`:
+
 ```yaml
 name: PHP
 value: 92
@@ -1971,6 +2037,7 @@ order: 1
 ```
 
 `src/content/skills/02-laravel.yml`:
+
 ```yaml
 name: Laravel
 value: 88
@@ -1980,6 +2047,7 @@ order: 2
 ```
 
 `src/content/skills/03-mysql.yml`:
+
 ```yaml
 name: MySQL
 value: 80
@@ -1989,6 +2057,7 @@ order: 3
 ```
 
 `src/content/skills/04-javascript.yml`:
+
 ```yaml
 name: JavaScript
 value: 65
@@ -1998,6 +2067,7 @@ order: 4
 ```
 
 `src/content/skills/05-vue.yml`:
+
 ```yaml
 name: Vue.js
 value: 55
@@ -2007,6 +2077,7 @@ order: 5
 ```
 
 `src/content/skills/06-docker.yml`:
+
 ```yaml
 name: Docker
 value: 70
@@ -2016,6 +2087,7 @@ order: 6
 ```
 
 `src/content/skills/07-linux.yml`:
+
 ```yaml
 name: Linux / CLI
 value: 78
@@ -2025,6 +2097,7 @@ order: 7
 ```
 
 `src/content/skills/08-git.yml`:
+
 ```yaml
 name: Git
 value: 85
@@ -2054,6 +2127,7 @@ git push
 ### Task 2.7: Перенести таймлайн в YAML
 
 **Files:**
+
 - Create: `src/content/timeline/2015.yml` ... `src/content/timeline/2025.yml` (7 файлов)
 - Reference: `../pixed_dev_design/Pages.jsx:129-137` (массив `TIMELINE` из 7 элементов)
 
@@ -2149,6 +2223,7 @@ git push
 ### Task 2.8: Создать заглушки `site/*` синглтонов
 
 **Files:**
+
 - Create: `src/content/site/home.mdx`
 - Create: `src/content/site/about.mdx`
 - Create: `src/content/site/contact.mdx`
@@ -2213,6 +2288,7 @@ git push
 ### Task 2.9: Smoke-проверка коллекций через временный health-check
 
 **Files:**
+
 - Modify: `src/pages/index.astro` (временное расширение, заменится в M2)
 
 - [ ] **Step 1: Расширить `src/pages/index.astro`, чтобы прочитать коллекции**
@@ -2226,15 +2302,14 @@ const projects = await getCollection('projects');
 const skills = await getCollection('skills');
 const timeline = await getCollection('timeline');
 ---
+
 <BaseLayout title="pixed-portfolio — M1 Foundation OK">
   <main class="container" style="padding:80px 0;">
-    <h1 style="font-family:var(--font-display);color:var(--green);">
-      flathead.is-a.dev
-    </h1>
-    <p style="margin-top:24px;color:var(--text);">
-      M1 Foundation OK. Real homepage lands in M2.
-    </p>
-    <ul style="margin-top:32px;color:var(--text-muted);font-family:var(--font-mono);font-size:14px;">
+    <h1 style="font-family:var(--font-display);color:var(--green);">flathead.is-a.dev</h1>
+    <p style="margin-top:24px;color:var(--text);">M1 Foundation OK. Real homepage lands in M2.</p>
+    <ul
+      style="margin-top:32px;color:var(--text-muted);font-family:var(--font-mono);font-size:14px;"
+    >
       <li>Projects loaded: {projects.length}</li>
       <li>Skills loaded: {skills.length}</li>
       <li>Timeline entries loaded: {timeline.length}</li>
@@ -2277,6 +2352,7 @@ curl -s https://flathead.is-a.dev/ | grep -E 'loaded:'
 ```
 
 Ожидаемое: HTML содержит строки:
+
 ```html
 <li>Projects loaded: 3</li>
 <li>Skills loaded: 8</li>
@@ -2284,6 +2360,7 @@ curl -s https://flathead.is-a.dev/ | grep -E 'loaded:'
 ```
 
 Если на проде получаются другие числа (или 500-ошибка) — проверить:
+
 - Cloudflare Pages billed как Build System V2 (Task 2.5 Step 6).
 - В CF Pages логах — секция `Fetching LFS objects` присутствует.
 - В env Pages-проекта — `NODE_VERSION=22`, `PNPM_VERSION=9`.
@@ -2295,6 +2372,7 @@ curl -s https://flathead.is-a.dev/ | grep -E 'loaded:'
 После завершения всех задач M1 эти пункты должны быть зелёными.
 
 **Infrastructure:**
+
 - [ ] Репозиторий `flathead/pixed-portfolio` создан, public, имеет `main` ветку.
 - [ ] Cloudflare Pages-проект `pixed-portfolio` подключён к репо, авто-деплой работает.
 - [ ] PR в is-a-dev/register merged, `dig +short flathead.is-a.dev CNAME` возвращает `pixed-portfolio.pages.dev.`
@@ -2304,6 +2382,7 @@ curl -s https://flathead.is-a.dev/ | grep -E 'loaded:'
 - [ ] Git LFS включён в Build System V2, проектные cover'ы успешно деплоятся.
 
 **Codebase:**
+
 - [ ] `pnpm install` отрабатывает без ошибок на чистой машине.
 - [ ] `pnpm dev` поднимает сервер на http://localhost:4321/.
 - [ ] `pnpm build` успешно собирает `dist/`.
@@ -2312,12 +2391,14 @@ curl -s https://flathead.is-a.dev/ | grep -E 'loaded:'
 - [ ] `pnpm format:check` не ругается.
 
 **Content:**
+
 - [ ] 3 проекта в `src/content/projects/<slug>/index.mdx` с корректным frontmatter.
 - [ ] 8 скиллов в `src/content/skills/*.yml`.
 - [ ] 7 таймлайн-событий в `src/content/timeline/*.yml`.
 - [ ] 3 синглтона в `src/content/site/*.mdx` (home, about, contact).
 
 **Production verification:**
+
 - [ ] Health-check на https://flathead.is-a.dev/ показывает `Projects loaded: 3`, `Skills loaded: 8`, `Timeline entries loaded: 7`.
 - [ ] Шрифт Tektur подгружается через preload (DevTools → Network).
 - [ ] Lighthouse Performance в DevTools на главной ≥ 95 (плейсхолдер-страница, ничего не должно тормозить).
@@ -2327,6 +2408,7 @@ curl -s https://flathead.is-a.dev/ | grep -E 'loaded:'
 ## Что входит и не входит в M1
 
 **Входит:**
+
 - Новый репо, CI/CD, домен, SSL, защита админки.
 - Скаффолд Astro со всеми зависимостями.
 - Дизайн-токены и базовые SCSS-миксины.
@@ -2335,6 +2417,7 @@ curl -s https://flathead.is-a.dev/ | grep -E 'loaded:'
 - Каркас i18n с unit-тестами.
 
 **Не входит (передаётся в M2+):**
+
 - Реальная вёрстка домашней страницы, страниц проектов, about, contact.
 - UI-компоненты (`PixelCard`, `PixelButton`, `HpBar`, ...).
 - MDX-компоненты (`Screenshot`, `Spoiler`, ...).

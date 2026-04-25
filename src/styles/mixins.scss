@@ -1,0 +1,125 @@
+// =====================================================================
+// SCSS Mixins for pixed-portfolio components
+//
+// Usage:
+//   @use '../styles/tokens' as *;
+//   @use '../styles/mixins' as m;
+//   .my-card { @include m.pixel-card; }
+// =====================================================================
+
+@use 'tokens' as *;
+
+// --- Card with pixel-shadow + lift on hover ---
+@mixin pixel-card($accent: $color-border) {
+  background: var(--surface);
+  border: 4px solid $accent;
+  box-shadow: $shadow-pixel-md $accent;
+  border-radius: $radius;
+  transition:
+    transform 120ms steps(4),
+    box-shadow 120ms steps(4),
+    border-color 120ms steps(4);
+
+  &:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: $shadow-pixel-lg var(--cyan);
+    border-color: var(--cyan);
+  }
+
+  &:active {
+    transform: translate(2px, 2px);
+    box-shadow: $shadow-pixel-sm $accent;
+  }
+}
+
+// --- Bracketed CTA with stepped easing ---
+@mixin pixel-button($accent: $color-green) {
+  display: inline-block;
+  padding: $space-3 $space-5;
+  font-family: var(--font-display);
+  font-size: $text-xs;
+  text-transform: uppercase;
+  letter-spacing: $tracking-pixel;
+  color: $accent;
+  background: transparent;
+  border: 4px solid $accent;
+  box-shadow: $shadow-pixel-md $accent;
+  cursor: pointer;
+  text-decoration: none;
+  transition:
+    transform 80ms steps(4),
+    box-shadow 80ms steps(4);
+
+  &::before {
+    content: '[';
+    margin-right: $space-2;
+  }
+  &::after {
+    content: ']';
+    margin-left: $space-2;
+  }
+
+  &:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: $shadow-pixel-lg $accent;
+  }
+  &:active {
+    transform: translate(2px, 2px);
+    box-shadow: $shadow-pixel-sm $accent;
+  }
+}
+
+// --- HP/XP-bar fill driven by --fill CSS variable (0%-100%) ---
+@mixin hp-bar($color: $color-green) {
+  position: relative;
+  width: 100%;
+  height: 16px;
+  background: var(--surface-2);
+  border: 2px solid var(--border);
+
+  &::after {
+    content: '';
+    display: block;
+    width: var(--fill, 0%);
+    height: 100%;
+    background: $color;
+    transition: width 800ms steps(8);
+  }
+}
+
+// --- All-caps display heading ---
+@mixin caps-display {
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  letter-spacing: $tracking-pixel;
+  line-height: $leading-tight;
+}
+
+// --- Nav item with `> ` cursor on hover ---
+@mixin nav-prefix-on-hover {
+  position: relative;
+
+  &::before {
+    content: '> ';
+    color: var(--green);
+    opacity: 0;
+    transition: opacity 80ms steps(2);
+  }
+
+  &:hover::before {
+    opacity: 1;
+  }
+}
+
+// --- Tag/badge: lowercase, monospace, surface-2 background ---
+@mixin pixel-tag($color: $color-purple) {
+  display: inline-block;
+  padding: 2px $space-3;
+  font-family: var(--font-code);
+  font-size: 13px;
+  text-transform: lowercase;
+  color: $color;
+  background: var(--surface-2);
+  border: 1px solid $color;
+  border-radius: $radius;
+}

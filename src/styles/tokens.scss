@@ -1,0 +1,163 @@
+// =====================================================================
+// Design Tokens — pixed-portfolio
+//
+// Pixel-art / retro-game aesthetic. CSS custom properties are mirrored
+// as SCSS variables for use in mixins. Components import this via:
+//   @use '../styles/tokens' as *;
+// =====================================================================
+
+// --- Backgrounds ---
+$color-bg: #0d0d1a;
+$color-surface: #1a1a2e;
+$color-surface-2: #16213e;
+$color-surface-3: #0f3460;
+
+// --- Borders ---
+$color-border: #2a2a4a;
+$color-border-bright: #444466;
+
+// --- Brand accents (8-bit palette) ---
+$color-green: #39ff14;
+$color-green-dim: #1a7a06;
+$color-cyan: #00e5ff;
+$color-cyan-dim: #006e7a;
+$color-magenta: #ff006e;
+$color-magenta-dim: #7a0034;
+$color-yellow: #ffd700;
+$color-yellow-dim: #7a6500;
+$color-purple: #9b59b6;
+$color-purple-dim: #4a1d6b;
+$color-orange: #ff6b00;
+
+// --- Text ---
+$color-text: #e8e8f0;
+$color-text-muted: #6b6b8a;
+$color-text-dim: #3a3a5a;
+$color-text-inverse: #0d0d1a;
+
+// --- Typography ---
+$font-display: 'Press Start 2P', monospace;
+$font-body: 'Tektur', monospace;
+$font-code: 'IBM Plex Mono', monospace;
+
+// Body sizes
+$text-xs: 14px;
+$text-sm: 16px;
+$text-base: 20px;
+$text-lg: 24px;
+$text-xl: 32px;
+
+// Display sizes
+$display-sm: 16px;
+$display-md: 24px;
+$display-lg: 36px;
+$display-xl: 48px;
+$display-2xl: 64px;
+
+// Line heights / letter spacing
+$leading-tight: 1.2;
+$leading-normal: 1.6;
+$leading-loose: 2;
+$tracking-pixel: 0.05em;
+$tracking-wide: 0.15em;
+
+// --- Spacing (8px base) ---
+$space-1: 4px;
+$space-2: 8px;
+$space-3: 12px;
+$space-4: 16px;
+$space-5: 24px;
+$space-6: 32px;
+$space-7: 48px;
+$space-8: 64px;
+$space-9: 96px;
+$space-10: 128px;
+
+$section-pad: 80px;
+$card-pad: 24px;
+
+// --- Pixel-art shadows (no blur, hard offset) ---
+$shadow-pixel-sm: 2px 2px 0;
+$shadow-pixel-md: 4px 4px 0;
+$shadow-pixel-lg: 6px 6px 0;
+$shadow-pixel-press: inset 2px 2px 0 #000;
+
+// --- Layout ---
+$max-width: 1100px;
+$radius: 0; // pixel art has no rounded corners
+
+// =====================================================================
+// CSS custom properties — exposed for runtime theming and component use.
+// =====================================================================
+:root {
+  // Backgrounds
+  --bg: #{$color-bg};
+  --surface: #{$color-surface};
+  --surface-2: #{$color-surface-2};
+  --surface-3: #{$color-surface-3};
+
+  // Borders
+  --border: #{$color-border};
+  --border-bright: #{$color-border-bright};
+
+  // Brand
+  --green: #{$color-green};
+  --green-dim: #{$color-green-dim};
+  --cyan: #{$color-cyan};
+  --cyan-dim: #{$color-cyan-dim};
+  --magenta: #{$color-magenta};
+  --magenta-dim: #{$color-magenta-dim};
+  --yellow: #{$color-yellow};
+  --yellow-dim: #{$color-yellow-dim};
+  --purple: #{$color-purple};
+  --purple-dim: #{$color-purple-dim};
+  --orange: #{$color-orange};
+
+  // Text
+  --text: #{$color-text};
+  --text-muted: #{$color-text-muted};
+  --text-dim: #{$color-text-dim};
+  --text-inverse: #{$color-text-inverse};
+
+  // Semantic aliases
+  --color-primary: var(--green);
+  --color-secondary: var(--cyan);
+  --color-danger: var(--magenta);
+  --color-warning: var(--yellow);
+  --color-info: var(--purple);
+  --color-success: var(--green);
+
+  // Typography
+  --font-display: #{$font-display};
+  --font-body: #{$font-body};
+  --font-code: #{$font-code};
+
+  // Sizes
+  --text-xs: #{$text-xs};
+  --text-sm: #{$text-sm};
+  --text-base: #{$text-base};
+  --text-lg: #{$text-lg};
+  --text-xl: #{$text-xl};
+  --display-sm: #{$display-sm};
+  --display-md: #{$display-md};
+  --display-lg: #{$display-lg};
+  --display-xl: #{$display-xl};
+  --display-2xl: #{$display-2xl};
+
+  // Spacing
+  --space-1: #{$space-1};
+  --space-2: #{$space-2};
+  --space-3: #{$space-3};
+  --space-4: #{$space-4};
+  --space-5: #{$space-5};
+  --space-6: #{$space-6};
+  --space-7: #{$space-7};
+  --space-8: #{$space-8};
+  --space-9: #{$space-9};
+  --space-10: #{$space-10};
+  --section-pad: #{$section-pad};
+  --card-pad: #{$card-pad};
+
+  // i18n switcher visibility — flip to 1 when EN is ready
+  --show-lang-switcher: 0;
+}

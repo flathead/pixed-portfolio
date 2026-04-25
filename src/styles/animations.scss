@@ -1,0 +1,35 @@
+// =====================================================================
+// Keyframes used in M1.
+// M3 will extend this with scroll-driven, parallax, and easter-egg
+// animations as new islands come online.
+// =====================================================================
+
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+@keyframes px-enter {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes typewriter {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
