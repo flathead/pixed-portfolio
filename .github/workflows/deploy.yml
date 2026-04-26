@@ -35,6 +35,11 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Rebuild sharp natives
+        # pnpm with --frozen-lockfile skips post-install scripts; sharp ships
+        # prebuilt binaries that need its install hook to fire. Force rebuild.
+        run: pnpm rebuild sharp
+
       - name: Build
         run: pnpm build
 
