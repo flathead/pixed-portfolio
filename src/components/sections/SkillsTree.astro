@@ -1,0 +1,101 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import HpBar from '../ui/HpBar.astro';
+
+interface Props {
+  skills: CollectionEntry<'skills'>[];
+  heading?: string;
+}
+
+const { skills, heading = '// СТАТЫ ПЕРСОНАЖА' } = Astro.props;
+
+const colorMap: Record<string, 'green' | 'cyan' | 'magenta' | 'yellow' | 'purple'> = {
+  'var(--green)': 'green',
+  'var(--cyan)': 'cyan',
+  'var(--magenta)': 'magenta',
+  'var(--yellow)': 'yellow',
+  'var(--purple)': 'purple',
+};
+
+const grouped = {
+  backend: skills.filter((s) => s.data.category === 'backend'),
+  frontend: skills.filter((s) => s.data.category === 'frontend'),
+  devops: skills.filter((s) => s.data.category === 'devops'),
+  tools: skills.filter((s) => s.data.category === 'tools'),
+};
+
+const groupLabels = {
+  backend: 'BACKEND',
+  frontend: 'FRONTEND',
+  devops: 'DEVOPS',
+  tools: 'TOOLS',
+} as const;
+---
+
+<section class="skills">
+  <div class="container">
+    <h2 class="skills__heading">{heading}</h2>
+
+    <div class="skills__grid">
+      {
+        (['backend', 'frontend', 'devops', 'tools'] as const).map(
+          (cat) =>
+            grouped[cat].length > 0 && (
+              <div class="skills__group">
+                <h3 class="skills__group-title">{groupLabels[cat]}</h3>
+                <div class="skills__bars">
+                  {grouped[cat]
+                    .sort((a, b) => a.data.order - b.data.order)
+                    .map((skill) => (
+                      <HpBar
+                        label={skill.data.name}
+                        value={skill.data.value}
+                        color={colorMap[skill.data.color]}
+                      />
+                    ))}
+                </div>
+              </div>
+            ),
+        )
+      }
+    </div>
+  </div>
+</section>
+
+<style lang="scss">
+  @use '../../styles/tokens' as *;
+
+  .skills {
+    padding: $space-7 0;
+  }
+
+  .skills__heading {
+    font-family: var(--font-display);
+    font-size: $text-lg;
+    color: var(--cyan);
+    text-transform: uppercase;
+    letter-spacing: $tracking-pixel;
+    margin: 0 0 $space-5;
+  }
+
+  .skills__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: $space-7;
+  }
+
+  .skills__group-title {
+    font-family: var(--font-display);
+    font-size: $text-xs;
+    color: var(--green);
+    text-transform: uppercase;
+    letter-spacing: $tracking-wide;
+    margin: 0 0 $space-3;
+  }
+
+  .skills__bars {
+    display: flex;
+    flex-direction: column;
+    gap: $space-3;
+  }
+</style>

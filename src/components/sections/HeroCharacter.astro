@@ -1,0 +1,75 @@
+---
+import PixelButton from '../ui/PixelButton.astro';
+
+interface Props {
+  title: string;
+  characterClass: string;
+  tagline: string;
+  ctaPrimary?: { href: string; label: string };
+  ctaSecondary?: { href: string; label: string };
+}
+
+const {
+  title,
+  characterClass,
+  tagline,
+  ctaPrimary = { href: '/projects/', label: 'Смотреть работы' },
+  ctaSecondary = { href: '/contact/', label: 'Начать квест' },
+} = Astro.props;
+---
+
+<section class="hero">
+  <div class="container">
+    <span class="hero__class">// {characterClass}</span>
+    <h1 class="hero__title">{title}</h1>
+    <p class="hero__tagline">{tagline}</p>
+
+    <div class="hero__cta">
+      <PixelButton href={ctaPrimary.href}>{ctaPrimary.label}</PixelButton>
+      <PixelButton href={ctaSecondary.href} variant="secondary">{ctaSecondary.label}</PixelButton>
+    </div>
+  </div>
+</section>
+
+<style lang="scss">
+  @use '../../styles/tokens' as *;
+
+  .hero {
+    padding: $space-9 0;
+  }
+
+  .hero__class {
+    display: block;
+    font-family: var(--font-code);
+    font-size: $text-sm;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: $tracking-wide;
+    margin-bottom: $space-3;
+  }
+
+  .hero__title {
+    font-family: var(--font-display);
+    font-size: clamp(28px, 5vw, $display-xl);
+    color: var(--green);
+    text-transform: uppercase;
+    letter-spacing: $tracking-pixel;
+    line-height: $leading-tight;
+    margin: 0 0 $space-5;
+  }
+
+  .hero__tagline {
+    font-family: var(--font-body);
+    font-size: $text-lg;
+    color: var(--text);
+    max-width: 56ch;
+    margin: 0 0 $space-7;
+    line-height: $leading-normal;
+  }
+
+  .hero__cta {
+    display: flex;
+    gap: $space-4;
+    flex-wrap: wrap;
+  }
+</style>

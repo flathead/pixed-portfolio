@@ -1,0 +1,222 @@
+---
+import PixelButton from '../ui/PixelButton.astro';
+import { CONTACT } from '../../lib/site-config';
+
+const PROJECT_TYPES = [
+  { id: 'ecom', label: 'Интернет-магазин', icon: '🛒' },
+  { id: 'corp', label: 'Корп. сайт', icon: '🏢' },
+  { id: 'crm', label: 'CRM / админка', icon: '⚙️' },
+  { id: 'bot', label: 'Бот / автоматизация', icon: '🤖' },
+  { id: 'legacy', label: 'Спасти legacy', icon: '💀' },
+  { id: 'other', label: 'Другое', icon: '✨' },
+] as const;
+
+const TIMELINES = [
+  { id: 'asap', label: 'ASAP', desc: 'Горит, сегодня-завтра' },
+  { id: 'month', label: 'Месяц', desc: 'Можно вдумчиво' },
+  { id: 'quarter', label: 'Квартал', desc: 'Спокойно и хорошо' },
+  { id: 'year', label: 'Год+', desc: 'Долгосрочный проект' },
+] as const;
+---
+
+<section class="wizard">
+  <header class="wizard__head">
+    <span class="wizard__label">// QUEST FORM</span>
+    <h1 class="wizard__title">Начать квест</h1>
+    <p class="wizard__intro">
+      Заполни — отвечу в течение суток. На M2 форма статичная, реальная отправка в TG появится в
+      следующей итерации. Срочно? <a href={`mailto:${CONTACT.email}`}>напиши на email</a> или
+      <a href={CONTACT.telegram}>в Telegram</a>.
+    </p>
+  </header>
+
+  <form class="wizard__form" method="post" action={`mailto:${CONTACT.email}`} enctype="text/plain">
+    <fieldset class="wizard__step">
+      <legend>1. Тип проекта</legend>
+      <div class="wizard__grid">
+        {
+          PROJECT_TYPES.map((pt) => (
+            <label class="wizard__option">
+              <input type="radio" name="projectType" value={pt.id} required />
+              <span class="wizard__icon" aria-hidden="true">
+                {pt.icon}
+              </span>
+              <span class="wizard__option-label">{pt.label}</span>
+            </label>
+          ))
+        }
+      </div>
+    </fieldset>
+
+    <fieldset class="wizard__step">
+      <legend>2. Бюджет (₽)</legend>
+      <input
+        type="number"
+        name="budget"
+        min="10000"
+        step="10000"
+        placeholder="напр. 100000"
+        required
+      />
+    </fieldset>
+
+    <fieldset class="wizard__step">
+      <legend>3. Сроки</legend>
+      <div class="wizard__grid">
+        {
+          TIMELINES.map((tl) => (
+            <label class="wizard__option">
+              <input type="radio" name="timeline" value={tl.id} required />
+              <span class="wizard__option-label">{tl.label}</span>
+              <span class="wizard__option-desc">{tl.desc}</span>
+            </label>
+          ))
+        }
+      </div>
+    </fieldset>
+
+    <fieldset class="wizard__step">
+      <legend>4. Контакт</legend>
+      <input type="text" name="name" placeholder="Имя" required />
+      <input type="email" name="email" placeholder="Email" required />
+    </fieldset>
+
+    <fieldset class="wizard__step">
+      <legend>5. Сообщение</legend>
+      <textarea name="message" rows="5" placeholder="Расскажи коротко о задаче..." required
+      ></textarea>
+    </fieldset>
+
+    <div class="wizard__submit">
+      <PixelButton type="submit">Отправить</PixelButton>
+    </div>
+  </form>
+</section>
+
+<style lang="scss">
+  @use '../../styles/tokens' as *;
+
+  .wizard {
+    padding: $space-7 0;
+    max-width: 760px;
+    margin: 0 auto;
+  }
+
+  .wizard__label {
+    font-family: var(--font-code);
+    font-size: $text-sm;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: $tracking-wide;
+  }
+
+  .wizard__title {
+    font-family: var(--font-display);
+    font-size: $display-lg;
+    color: var(--green);
+    text-transform: uppercase;
+    letter-spacing: $tracking-pixel;
+    margin: $space-2 0 $space-4;
+  }
+
+  .wizard__intro {
+    color: var(--text);
+    line-height: $leading-normal;
+    margin: 0 0 $space-7;
+
+    a {
+      color: var(--cyan);
+    }
+  }
+
+  .wizard__step {
+    border: 4px solid var(--border);
+    padding: $space-5;
+    margin: 0 0 $space-5;
+    background: var(--surface);
+
+    legend {
+      font-family: var(--font-display);
+      font-size: $text-xs;
+      color: var(--cyan);
+      text-transform: uppercase;
+      letter-spacing: $tracking-pixel;
+      padding: 0 $space-3;
+    }
+
+    input[type='text'],
+    input[type='email'],
+    input[type='number'],
+    textarea {
+      width: 100%;
+      padding: $space-3;
+      margin-bottom: $space-3;
+      background: var(--surface-2);
+      border: 2px solid var(--border);
+      color: var(--text);
+      font-family: var(--font-code);
+      font-size: $text-sm;
+
+      &:focus {
+        outline: none;
+        border-color: var(--cyan);
+      }
+    }
+
+    textarea {
+      resize: vertical;
+    }
+  }
+
+  .wizard__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: $space-3;
+  }
+
+  .wizard__option {
+    display: flex;
+    flex-direction: column;
+    gap: $space-1;
+    padding: $space-3;
+    border: 2px solid var(--border);
+    background: var(--surface-2);
+    cursor: pointer;
+    transition: border-color 80ms steps(2);
+
+    &:has(input:checked) {
+      border-color: var(--green);
+      box-shadow: $shadow-pixel-sm var(--green-dim);
+    }
+
+    input[type='radio'] {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+  }
+
+  .wizard__icon {
+    font-size: $text-base;
+  }
+
+  .wizard__option-label {
+    font-family: var(--font-code);
+    font-size: $text-sm;
+    color: var(--text);
+    text-transform: uppercase;
+    letter-spacing: $tracking-pixel;
+  }
+
+  .wizard__option-desc {
+    font-family: var(--font-body);
+    font-size: $text-sm;
+    color: var(--text-muted);
+  }
+
+  .wizard__submit {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: $space-5;
+  }
+</style>

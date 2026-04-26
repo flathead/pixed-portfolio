@@ -1,41 +1,37 @@
 ---
-import { getCollection } from 'astro:content';
-import BaseLayout from '../layouts/BaseLayout.astro';
+import type { CollectionEntry } from 'astro:content';
+import { getCollection, getEntry } from 'astro:content';
+import MainLayout from '../layouts/MainLayout.astro';
+import HeroCharacter from '../components/sections/HeroCharacter.astro';
+import ProjectsGrid from '../components/sections/ProjectsGrid.astro';
+import SkillsTree from '../components/sections/SkillsTree.astro';
+import PixelDivider from '../components/ui/PixelDivider.astro';
 
-const projects = await getCollection('projects');
+const home = await getEntry('site', 'home');
+const allProjects: CollectionEntry<'projects'>[] = await getCollection('projects');
+const featured = allProjects
+  .filter((p: CollectionEntry<'projects'>) => p.data.featured)
+  .sort(
+    (a: CollectionEntry<'projects'>, b: CollectionEntry<'projects'>) => a.data.order - b.data.order,
+  );
 const skills = await getCollection('skills');
-const timeline = await getCollection('timeline');
-const site = await getCollection('site');
-
-const buildTime = new Date().toISOString();
 ---
 
-<BaseLayout title="pixed-portfolio — M1 OK">
-  <main class="container" style="padding: 80px 0;">
-    <h1
-      style="font-family: var(--font-display); color: var(--green); text-transform: uppercase; letter-spacing: 0.05em; font-size: var(--display-md); line-height: 1.5;"
-    >
-      flathead.is-a.dev — M1 Foundation OK
-    </h1>
-    <p style="margin-top: var(--space-5); color: var(--text);">
-      Astro skeleton deployed. Real homepage lands in M2.
-    </p>
+<MainLayout
+  title="flathead — PHP-разработчик"
+  description="Портфолио PHP-разработчика flathead. Pixel-art, сторителлинг, реальные проекты."
+>
+  <HeroCharacter
+    title={home?.data.title ?? 'flathead — PHP-разработчик'}
+    characterClass="PHP-кудесник, lvl 25"
+    tagline="Пишу код с 2015. Беру проекты, где нужно подумать. Laravel, PostgreSQL, Telegram-боты, инфраструктура."
+  />
 
-    <ul
-      style="margin-top: var(--space-6); padding: var(--space-5); border: 4px solid var(--border); list-style: none; color: var(--text-muted); font-family: var(--font-code); font-size: var(--text-sm); line-height: 2;"
-    >
-      <li>Projects loaded: <strong style="color: var(--green)">{projects.length}</strong></li>
-      <li>Skills loaded: <strong style="color: var(--green)">{skills.length}</strong></li>
-      <li>
-        Timeline entries loaded: <strong style="color: var(--green)">{timeline.length}</strong>
-      </li>
-      <li>Site singletons loaded: <strong style="color: var(--green)">{site.length}</strong></li>
-    </ul>
+  <PixelDivider accent="green" />
 
-    <p
-      style="margin-top: var(--space-5); color: var(--text-muted); font-family: var(--font-code); font-size: var(--text-sm);"
-    >
-      Build: {buildTime}
-    </p>
-  </main>
-</BaseLayout>
+  <ProjectsGrid projects={featured} heading="// ИЗБРАННЫЕ КВЕСТЫ" />
+
+  <PixelDivider accent="cyan" />
+
+  <SkillsTree skills={skills} />
+</MainLayout>

@@ -1,0 +1,84 @@
+---
+import { getCollection, getEntry, render } from 'astro:content';
+import MainLayout from '../layouts/MainLayout.astro';
+import Timeline from '../components/sections/Timeline.astro';
+import SkillsTree from '../components/sections/SkillsTree.astro';
+import PixelDivider from '../components/ui/PixelDivider.astro';
+
+const about = await getEntry('site', 'about');
+const skills = await getCollection('skills');
+const events = await getCollection('timeline');
+
+if (!about) {
+  throw new Error('content/site/about.mdx not found');
+}
+
+const { Content } = await render(about);
+---
+
+<MainLayout
+  title="О себе — flathead"
+  description="Десять лет в PHP, последние пять — в Laravel. Краткая хроника и стек."
+>
+  <article class="about container">
+    <header class="about__head">
+      <span class="about__label">// CHARACTER PROFILE</span>
+      <h1 class="about__title">{about.data.title}</h1>
+    </header>
+
+    <div class="about__body">
+      <Content />
+    </div>
+  </article>
+
+  <PixelDivider accent="cyan" />
+
+  <SkillsTree skills={skills} />
+
+  <PixelDivider accent="yellow" />
+
+  <Timeline events={events} />
+</MainLayout>
+
+<style lang="scss">
+  @use '../styles/tokens' as *;
+
+  .about {
+    padding: $space-7 0;
+  }
+
+  .about__label {
+    font-family: var(--font-code);
+    font-size: $text-sm;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: $tracking-wide;
+  }
+
+  .about__title {
+    font-family: var(--font-display);
+    font-size: $display-lg;
+    color: var(--green);
+    text-transform: uppercase;
+    letter-spacing: $tracking-pixel;
+    line-height: $leading-tight;
+    margin: $space-2 0 $space-5;
+  }
+
+  .about__body {
+    color: var(--text);
+    line-height: $leading-normal;
+    max-width: 70ch;
+
+    :global(p) {
+      margin: 0 0 $space-4;
+    }
+    :global(h2) {
+      font-family: var(--font-display);
+      font-size: $text-base;
+      color: var(--cyan);
+      text-transform: uppercase;
+      margin: $space-5 0 $space-3;
+    }
+  }
+</style>

@@ -14,25 +14,26 @@
 
 **Locked decisions:**
 
-| Тема | Решение |
-|---|---|
-| Layout pattern | `BaseLayout` (M1) → `MainLayout` (новый M2) → `pages/*` |
-| Header | sticky top, минимальный: `[ flathead.dev ]` слева, nav посередине (`Главная / Проекты / О себе / Контакт`), справа: lang-switcher (скрыт CSS-переменной из M1) + gear-icon (placeholder без логики) |
-| Footer | одна строка: copyright + GitHub + Telegram + email |
-| Theme tweaker (M2) | placeholder: gear-icon `<button>` без поведения. Реальная логика — M3 как Svelte island |
-| Lang switcher (M2) | placeholder: `[RU \| EN]` button. Видимость через `--show-lang-switcher: 0` (из M1, остаётся скрыт) |
-| Контактная форма | статичный 5-шаговый визард на чистом HTML+CSS. Все state-changes через `<details>` или radio-buttons. На submit — `<a href="mailto:...">` или alert. Реальная отправка — M4 как Svelte island |
-| View Transitions | НЕТ в M2 (требует `<ClientRouter />` — это M3) |
-| Изображения | `astro:assets` `<Image />` для всех cover'ов (auto AVIF/WebP, lazy by default) |
-| Анимации | только CSS-hover/transitions из миксинов M1 (pixel-card, pixel-button). Никаких scroll-driven, никаких stagger — это M3 |
-| Cursor trail / scanlines / grid-bg / boot-screen | НЕ имплементируем (cut по spec секция 4) |
-| HP-bars скиллов | статичная заливка `--fill: 92%` через inline-style. Анимация-on-scroll — M3 |
-| `/dev/components/` showcase | оставляем доступным в проде. Удаляется в M5 polishing |
-| `<ContactForm />` action | placeholder `<form>` без `action`/JS — submit ничего не делает или открывает mailto |
-| 404 страница | кастомная пиксельная, использует `MainLayout` |
-| EN routes | НЕ создаём в M2 — оставляем костяк i18n из M1 как есть, switcher скрыт |
+| Тема                                             | Решение                                                                                                                                                                                             |
+| ------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Layout pattern                                   | `BaseLayout` (M1) → `MainLayout` (новый M2) → `pages/*`                                                                                                                                             |
+| Header                                           | sticky top, минимальный: `[ flathead.dev ]` слева, nav посередине (`Главная / Проекты / О себе / Контакт`), справа: lang-switcher (скрыт CSS-переменной из M1) + gear-icon (placeholder без логики) |
+| Footer                                           | одна строка: copyright + GitHub + Telegram + email                                                                                                                                                  |
+| Theme tweaker (M2)                               | placeholder: gear-icon `<button>` без поведения. Реальная логика — M3 как Svelte island                                                                                                             |
+| Lang switcher (M2)                               | placeholder: `[RU \| EN]` button. Видимость через `--show-lang-switcher: 0` (из M1, остаётся скрыт)                                                                                                 |
+| Контактная форма                                 | статичный 5-шаговый визард на чистом HTML+CSS. Все state-changes через `<details>` или radio-buttons. На submit — `<a href="mailto:...">` или alert. Реальная отправка — M4 как Svelte island       |
+| View Transitions                                 | НЕТ в M2 (требует `<ClientRouter />` — это M3)                                                                                                                                                      |
+| Изображения                                      | `astro:assets` `<Image />` для всех cover'ов (auto AVIF/WebP, lazy by default)                                                                                                                      |
+| Анимации                                         | только CSS-hover/transitions из миксинов M1 (pixel-card, pixel-button). Никаких scroll-driven, никаких stagger — это M3                                                                             |
+| Cursor trail / scanlines / grid-bg / boot-screen | НЕ имплементируем (cut по spec секция 4)                                                                                                                                                            |
+| HP-bars скиллов                                  | статичная заливка `--fill: 92%` через inline-style. Анимация-on-scroll — M3                                                                                                                         |
+| `/dev/components/` showcase                      | оставляем доступным в проде. Удаляется в M5 polishing                                                                                                                                               |
+| `<ContactForm />` action                         | placeholder `<form>` без `action`/JS — submit ничего не делает или открывает mailto                                                                                                                 |
+| 404 страница                                     | кастомная пиксельная, использует `MainLayout`                                                                                                                                                       |
+| EN routes                                        | НЕ создаём в M2 — оставляем костяк i18n из M1 как есть, switcher скрыт                                                                                                                              |
 
 **Out of scope (M3/M4/M5):**
+
 - Animation islands (typewriter, hp-bars-on-scroll, matrix rain, easter eggs, glitch logo, theme tweaker logic)
 - Contact form submission (Cloudflare Pages Functions, Telegram adapter, Turnstile, rate limit)
 - Sveltia CMS (`/admin/`, OAuth Worker, editor_components)
@@ -98,6 +99,7 @@ src/
 ```
 
 **Новые ключевые файлы и их единственная ответственность:**
+
 - `MainLayout.astro` — оборачивает страницы Header'ом и Footer'ом, ничего не знает о контенте.
 - `ui/*` — чистая разметка + scoped SCSS. Принимают `slot` и минимум props (`href`, `accent`, `value`).
 - `sections/*` — собирают `ui/*` в крупные блоки, принимают данные пропсом, не вызывают `getCollection` сами.
@@ -112,6 +114,7 @@ src/
 ### Task 3.1: site-config + MainLayout
 
 **Files:**
+
 - Create: `src/lib/site-config.ts`
 - Create: `src/layouts/MainLayout.astro`
 - Create: `src/components/nav/Header.astro` (placeholder с одной ссылкой — расширим в Task 4.1)
@@ -295,6 +298,7 @@ git commit -m "feat(layout): site-config, MainLayout, Header/Footer placeholders
 ### Task 3.2: PixelCard и PixelDivider
 
 **Files:**
+
 - Create: `src/components/ui/PixelCard.astro`
 - Create: `src/components/ui/PixelDivider.astro`
 
@@ -409,6 +413,7 @@ git commit -m "feat(ui): add PixelCard and PixelDivider atoms"
 ### Task 3.3: PixelButton
 
 **Files:**
+
 - Create: `src/components/ui/PixelButton.astro`
 
 - [ ] **Step 1: Создать `src/components/ui/PixelButton.astro`**
@@ -435,10 +440,7 @@ const Tag = href ? 'a' : 'button';
 const tagProps = href ? { href } : { type, disabled };
 ---
 
-<Tag
-  {...tagProps}
-  class:list={['pixel-btn', `pixel-btn--${variant}`, className]}
->
+<Tag {...tagProps} class:list={['pixel-btn', `pixel-btn--${variant}`, className]}>
   <slot />
 </Tag>
 
@@ -488,6 +490,7 @@ git commit -m "feat(ui): add PixelButton atom (link/button polymorphic)"
 ### Task 3.4: TechBadge и ComplexityStars
 
 **Files:**
+
 - Create: `src/components/ui/TechBadge.astro`
 - Create: `src/components/ui/ComplexityStars.astro`
 
@@ -604,6 +607,7 @@ git commit -m "feat(ui): add TechBadge and ComplexityStars atoms"
 ### Task 3.5: HpBar и QuestLog
 
 **Files:**
+
 - Create: `src/components/ui/HpBar.astro`
 - Create: `src/components/ui/QuestLog.astro`
 
@@ -814,6 +818,7 @@ git commit -m "feat(ui): add HpBar and QuestLog atoms"
 ### Task 3.6: MDX text components — Spoiler, Callout, Quest
 
 **Files:**
+
 - Create: `src/components/mdx/Spoiler.astro`
 - Create: `src/components/mdx/Callout.astro`
 - Create: `src/components/mdx/Quest.astro`
@@ -1039,6 +1044,7 @@ git commit -m "feat(mdx): add Spoiler, Callout, Quest text components"
 ### Task 3.7: MDX Screenshot + TechBadge re-export
 
 **Files:**
+
 - Create: `src/components/mdx/Screenshot.astro`
 - Create: `src/components/mdx/TechBadge.astro`
 
@@ -1140,6 +1146,7 @@ git commit -m "feat(mdx): add Screenshot (astro:assets) and TechBadge re-export"
 ### Task 3.8: Регистрировать MDX-компоненты глобально
 
 **Files:**
+
 - Modify: `astro.config.mjs`
 
 > Astro 6 не поддерживает глобальные `mdx.components` через config — это API было в Astro 4. В Astro 6 рекомендуемый паттерн — импортировать компоненты в каждом MDX-файле через `import` (но это инвазивно для контент-редактора), либо использовать [`@astrojs/markdoc`](https://docs.astro.build/en/guides/integrations-guide/markdoc/), либо настроить через `remark-mdx-components` (community). Для M2 будем регистрировать компоненты в layout, передавая через `components` prop в `<Content components={...} />`.
@@ -1176,6 +1183,7 @@ git commit -m "feat(mdx): barrel export of MDX components for [slug].astro"
 ### Task 3.9: Dev showcase `/dev/components/`
 
 **Files:**
+
 - Create: `src/pages/dev/components.astro`
 
 - [ ] **Step 1: Создать `src/pages/dev/components.astro`**
@@ -1256,7 +1264,7 @@ import Quest from '../../components/mdx/Quest.astro';
       <h2>QuestLog</h2>
       <QuestLog
         problem="Демо-проблема для проверки рендера."
-        stack={["php-8.2", "laravel", "redis"]}
+        stack={['php-8.2', 'laravel', 'redis']}
         outcome="Демо-исход с конкретным результатом."
         learned="Что-то полезное."
       />
@@ -1350,6 +1358,7 @@ git commit -m "feat(dev): add /dev/components showcase page"
 ### Task 4.1: Header (full)
 
 **Files:**
+
 - Modify: `src/components/nav/Header.astro`
 - Create: `src/components/nav/LangSwitcher.astro`
 - Create: `src/components/nav/ThemeTweakerBtn.astro`
@@ -1571,6 +1580,7 @@ git commit -m "feat(nav): full Header with nav links, lang switcher (hidden), th
 ### Task 4.2: Footer (final)
 
 **Files:**
+
 - Modify: `src/components/nav/Footer.astro`
 
 > Footer уже создан в Task 3.1 как минимальный. Этот task — финальная полировка с правильной типографикой и адаптивностью.
@@ -1586,7 +1596,8 @@ const year = new Date().getFullYear();
 <footer class="footer">
   <div class="container footer__inner">
     <span class="footer__copyright">
-      © {SITE.copyrightStart}–{year} {SITE.author}
+      © {SITE.copyrightStart}–{year}
+      {SITE.author}
     </span>
     <nav class="footer__links" aria-label="Внешние ссылки">
       <a href={CONTACT.github} rel="me noopener" target="_blank">github</a>
@@ -1665,6 +1676,7 @@ git commit -m "feat(nav): polish Footer with responsive layout"
 ### Task 4.3: HeroCharacter section
 
 **Files:**
+
 - Create: `src/components/sections/HeroCharacter.astro`
 
 - [ ] **Step 1: Создать `src/components/sections/HeroCharacter.astro`**
@@ -1763,6 +1775,7 @@ git commit -m "feat(sections): add HeroCharacter for homepage"
 ### Task 4.4: ProjectsGrid section
 
 **Files:**
+
 - Create: `src/components/sections/ProjectsGrid.astro`
 
 - [ ] **Step 1: Создать `src/components/sections/ProjectsGrid.astro`**
@@ -1919,6 +1932,7 @@ git commit -m "feat(sections): add ProjectsGrid (auto-fill grid + cover image)"
 ### Task 4.5: SkillsTree section
 
 **Files:**
+
 - Create: `src/components/sections/SkillsTree.astro`
 
 - [ ] **Step 1: Создать `src/components/sections/SkillsTree.astro`**
@@ -1964,24 +1978,25 @@ const groupLabels = {
 
     <div class="skills__grid">
       {
-        (['backend', 'frontend', 'devops', 'tools'] as const).map((cat) => (
-          grouped[cat].length > 0 && (
-            <div class="skills__group">
-              <h3 class="skills__group-title">{groupLabels[cat]}</h3>
-              <div class="skills__bars">
-                {grouped[cat]
-                  .sort((a, b) => a.data.order - b.data.order)
-                  .map((skill) => (
-                    <HpBar
-                      label={skill.data.name}
-                      value={skill.data.value}
-                      color={colorMap[skill.data.color]}
-                    />
-                  ))}
+        (['backend', 'frontend', 'devops', 'tools'] as const).map(
+          (cat) =>
+            grouped[cat].length > 0 && (
+              <div class="skills__group">
+                <h3 class="skills__group-title">{groupLabels[cat]}</h3>
+                <div class="skills__bars">
+                  {grouped[cat]
+                    .sort((a, b) => a.data.order - b.data.order)
+                    .map((skill) => (
+                      <HpBar
+                        label={skill.data.name}
+                        value={skill.data.value}
+                        color={colorMap[skill.data.color]}
+                      />
+                    ))}
+                </div>
               </div>
-            </div>
-          )
-        ))
+            ),
+        )
       }
     </div>
   </div>
@@ -2042,6 +2057,7 @@ git commit -m "feat(sections): add SkillsTree grouped by category"
 ### Task 4.6: Timeline section
 
 **Files:**
+
 - Create: `src/components/sections/Timeline.astro`
 
 - [ ] **Step 1: Создать `src/components/sections/Timeline.astro`**
@@ -2175,6 +2191,7 @@ git commit -m "feat(sections): add Timeline (chronological list with year/icon)"
 ### Task 4.7: Replace home page (`/`)
 
 **Files:**
+
 - Modify: `src/pages/index.astro`
 
 - [ ] **Step 1: Переписать `src/pages/index.astro`**
@@ -2190,7 +2207,9 @@ import PixelDivider from '../components/ui/PixelDivider.astro';
 
 const home = await getEntry('site', 'home');
 const allProjects = await getCollection('projects');
-const featured = allProjects.filter((p) => p.data.featured).sort((a, b) => a.data.order - b.data.order);
+const featured = allProjects
+  .filter((p) => p.data.featured)
+  .sort((a, b) => a.data.order - b.data.order);
 const skills = await getCollection('skills');
 ---
 
@@ -2230,6 +2249,7 @@ git commit -m "feat(pages): replace M1 health-check with real homepage"
 ### Task 4.8: About page (`/about/`)
 
 **Files:**
+
 - Create: `src/pages/about.astro`
 
 - [ ] **Step 1: Создать `src/pages/about.astro`**
@@ -2337,6 +2357,7 @@ git commit -m "feat(pages): add /about page (bio + skills + timeline)"
 ### Task 4.9: Projects index page (`/projects/`)
 
 **Files:**
+
 - Create: `src/pages/projects/index.astro`
 
 - [ ] **Step 1: Создать `src/pages/projects/index.astro`**
@@ -2351,7 +2372,10 @@ const projects = await getCollection('projects');
 const sorted = [...projects].sort((a, b) => a.data.order - b.data.order);
 ---
 
-<MainLayout title="Проекты — flathead" description="Все проекты флэтхеда: e-commerce, CRM, телеграм-боты.">
+<MainLayout
+  title="Проекты — flathead"
+  description="Все проекты флэтхеда: e-commerce, CRM, телеграм-боты."
+>
   <div class="container projects-page">
     <header class="projects-page__head">
       <span class="projects-page__label">// АРХИВ КВЕСТОВ</span>
@@ -2412,6 +2436,7 @@ git commit -m "feat(pages): add /projects index page"
 ### Task 4.10: Project detail page (`/projects/[slug]/`)
 
 **Files:**
+
 - Create: `src/pages/projects/[slug].astro`
 
 - [ ] **Step 1: Создать `src/pages/projects/[slug].astro`**
@@ -2479,7 +2504,13 @@ const { Content } = await render(project);
       <div>
         <dt>Статус</dt>
         <dd class={`project__status project__status--${project.data.status}`}>
-          {project.data.status === 'completed' ? 'Завершён' : project.data.status === 'in_progress' ? 'В работе' : 'Архив'}
+          {
+            project.data.status === 'completed'
+              ? 'Завершён'
+              : project.data.status === 'in_progress'
+                ? 'В работе'
+                : 'Архив'
+          }
         </dd>
       </div>
       <div>
@@ -2696,6 +2727,7 @@ const { Content } = await render(project);
 - [ ] **Step 2: `pnpm check && pnpm build`**
 
 Expected: 0 errors. В выводе билда:
+
 ```
 ├─ /projects/sport-nutrition/index.html
 ├─ /projects/real-estate-crm/index.html
@@ -2714,6 +2746,7 @@ git commit -m "feat(pages): add /projects/[slug] detail page with MDX rendering"
 ### Task 4.11: Contact page + ContactWizard section (статика)
 
 **Files:**
+
 - Create: `src/components/sections/ContactWizard.astro`
 - Create: `src/pages/contact.astro`
 
@@ -2746,8 +2779,10 @@ const TIMELINES = [
     <span class="wizard__label">// QUEST FORM</span>
     <h1 class="wizard__title">Начать квест</h1>
     <p class="wizard__intro">
-      Заполни — отвечу в течение суток. На M2 форма статичная, реальная отправка в TG появится в следующей итерации.
-      Срочно? <a href={`mailto:${CONTACT.email}`}>напиши на email</a> или <a href={CONTACT.telegram}>в Telegram</a>.
+      Заполни — отвечу в течение суток. На M2 форма статичная, реальная отправка в TG появится в
+      следующей итерации. Срочно? <a href={`mailto:${CONTACT.email}`}>напиши на email</a> или <a
+        href={CONTACT.telegram}>в Telegram</a
+      >.
     </p>
   </header>
 
@@ -2759,7 +2794,9 @@ const TIMELINES = [
           PROJECT_TYPES.map((pt) => (
             <label class="wizard__option">
               <input type="radio" name="projectType" value={pt.id} required />
-              <span class="wizard__icon" aria-hidden="true">{pt.icon}</span>
+              <span class="wizard__icon" aria-hidden="true">
+                {pt.icon}
+              </span>
               <span class="wizard__option-label">{pt.label}</span>
             </label>
           ))
@@ -2769,7 +2806,14 @@ const TIMELINES = [
 
     <fieldset class="wizard__step">
       <legend>2. Бюджет (₽)</legend>
-      <input type="number" name="budget" min="10000" step="10000" placeholder="напр. 100000" required />
+      <input
+        type="number"
+        name="budget"
+        min="10000"
+        step="10000"
+        placeholder="напр. 100000"
+        required
+      />
     </fieldset>
 
     <fieldset class="wizard__step">
@@ -2795,7 +2839,8 @@ const TIMELINES = [
 
     <fieldset class="wizard__step">
       <legend>5. Сообщение</legend>
-      <textarea name="message" rows="5" placeholder="Расскажи коротко о задаче..." required></textarea>
+      <textarea name="message" rows="5" placeholder="Расскажи коротко о задаче..." required
+      ></textarea>
     </fieldset>
 
     <div class="wizard__submit">
@@ -2946,7 +2991,10 @@ import ContactWizard from '../components/sections/ContactWizard.astro';
 const contact = await getEntry('site', 'contact');
 ---
 
-<MainLayout title="Контакт — flathead" description="Заполни форму или напиши напрямую — отвечу в течение суток.">
+<MainLayout
+  title="Контакт — flathead"
+  description="Заполни форму или напиши напрямую — отвечу в течение суток."
+>
   <ContactWizard />
 </MainLayout>
 ```
@@ -2969,6 +3017,7 @@ git commit -m "feat(pages): add /contact with static 5-step wizard (mailto fallb
 ### Task 4.12: 404 page
 
 **Files:**
+
 - Create: `src/pages/404.astro`
 
 - [ ] **Step 1: Создать `src/pages/404.astro`**
@@ -2984,7 +3033,8 @@ import PixelButton from '../components/ui/PixelButton.astro';
     <span class="error__code">// ERROR 404</span>
     <h1 class="error__title">Квест не найден</h1>
     <p class="error__msg">
-      Эта страница либо никогда не существовала, либо стерта временем. Возвращайся на главную или проверь архив проектов.
+      Эта страница либо никогда не существовала, либо стерта временем. Возвращайся на главную или
+      проверь архив проектов.
     </p>
     <div class="error__cta">
       <PixelButton href="/">На главную</PixelButton>
@@ -3055,6 +3105,7 @@ git commit -m "feat(pages): add custom 404"
 - [ ] **Step 1: Финальный `pnpm check && pnpm test && pnpm build && pnpm format:check`**
 
 Run все четыре. Expected:
+
 - check: 0 errors / 0 warnings / 0 hints
 - test: 16/16 passed (вся i18n из M1)
 - build: 8 страниц → `/`, `/about/`, `/contact/`, `/404`, `/dev/components/`, `/projects/`, `/projects/sport-nutrition/`, `/projects/real-estate-crm/`, `/projects/food-delivery-bot/` (итого 9 HTML)
@@ -3069,6 +3120,7 @@ git push
 ```
 
 CI задеплоит в ~30-60 секунд. Проверить:
+
 ```bash
 curl -sI https://pixed-portfolio.pages.dev/
 curl -sI https://pixed-portfolio.pages.dev/projects/sport-nutrition/
@@ -3083,6 +3135,7 @@ curl -sI https://pixed-portfolio.pages.dev/dev/components/
 - [ ] **Step 3: Smoke на проде через браузер (рекомендация)**
 
 Открыть в браузере по очереди:
+
 - `/` — Hero, 2 featured-проекта, скиллы, footer.
 - `/projects/` — все 3 проекта в сетке.
 - `/projects/sport-nutrition/` — большая страница с обложкой, specs, tags, body, quest log.
@@ -3102,12 +3155,14 @@ curl -sI https://pixed-portfolio.pages.dev/dev/components/
 ## Verification Checklist (end of M2)
 
 **Build & types:**
+
 - [ ] `pnpm check` — 0 errors / 0 warnings / 0 hints
 - [ ] `pnpm test` — 16/16 (i18n из M1 не сломались)
 - [ ] `pnpm build` создаёт 9 HTML-страниц (1 home + 1 about + 1 contact + 1 404 + 1 dev/components + 1 projects + 3 projects/[slug])
 - [ ] `pnpm format:check` clean
 
 **Pages & content:**
+
 - [ ] `/` показывает Hero, 2 featured-проекта (sport-nutrition + real-estate-crm), все 8 скиллов сгруппированы.
 - [ ] `/projects/` показывает все 3 проекта в auto-fill grid.
 - [ ] `/projects/sport-nutrition/` рендерит cover, specs, tech-tags, MDX-body со сторителлингом, QuestLog внизу.
@@ -3118,6 +3173,7 @@ curl -sI https://pixed-portfolio.pages.dev/dev/components/
 - [ ] `/dev/components/` отображает все ui- и mdx-компоненты.
 
 **Visuals & UX:**
+
 - [ ] Header sticky сверху, лого слева, nav посередине, переключатели справа (lang-switcher скрыт через CSS-переменную).
 - [ ] Footer с copyright и тремя ссылками внизу всех страниц.
 - [ ] Все карточки имеют pixel-borders + hard shadows.
@@ -3128,12 +3184,14 @@ curl -sI https://pixed-portfolio.pages.dev/dev/components/
 - [ ] Mobile (≤480px) — header не ломается, footer стакается вертикально, projects-grid → 1 колонка.
 
 **Production:**
+
 - [ ] CI workflow на push в `main` зелёный.
 - [ ] `https://pixed-portfolio.pages.dev/` показывает реальный сайт, не M1 health-check.
 - [ ] Все URL отвечают 200.
 - [ ] LFS-картинки (cover'ы) загружаются (DevTools Network → 200 на `_image/...avif`).
 
 **Acceptance for is-a.dev (post-M2):**
+
 - [ ] Сайт визуально целостный, не похож на «Hello World» или скаффолд.
 - [ ] Минимум 3 проекта со сторителлингом.
 - [ ] About и Contact заполнены содержанием.
@@ -3144,6 +3202,7 @@ curl -sI https://pixed-portfolio.pages.dev/dev/components/
 ## What's in / out of M2
 
 **In:**
+
 - Все 6 публичных страниц + 1 dev showcase + кастомная 404.
 - Полный набор UI-атомов (PixelCard, PixelButton, PixelDivider, TechBadge, ComplexityStars, HpBar, QuestLog).
 - Полный набор MDX-компонентов (Screenshot, Spoiler, Callout, Quest, TechBadge).
@@ -3153,6 +3212,7 @@ curl -sI https://pixed-portfolio.pages.dev/dev/components/
 - site-config.ts как single source of truth для адресов.
 
 **Out (M3+):**
+
 - Любой client-side JS (matrix rain, easter eggs, theme tweaker logic, glitch logo, typewriter, animated HP-bars on scroll).
 - View Transitions между страницами.
 - Cloudflare Pages Function для contact-form (`/api/contact`).

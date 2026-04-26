@@ -1,0 +1,110 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  events: CollectionEntry<'timeline'>[];
+  heading?: string;
+}
+
+const { events, heading = '// ХРОНИКА' } = Astro.props;
+const sorted = [...events].sort((a, b) => a.data.year - b.data.year);
+---
+
+<section class="timeline">
+  <div class="container">
+    <h2 class="timeline__heading">{heading}</h2>
+
+    <ol class="timeline__list">
+      {
+        sorted.map((event) => (
+          <li class="timeline__item">
+            <span class="timeline__year">{event.data.year}</span>
+            <span class="timeline__icon" aria-hidden="true">
+              {event.data.icon ?? '◆'}
+            </span>
+            <div class="timeline__body">
+              <h3 class="timeline__title">{event.data.title}</h3>
+              <p class="timeline__desc">{event.data.description}</p>
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
+
+<style lang="scss">
+  @use '../../styles/tokens' as *;
+
+  .timeline {
+    padding: $space-7 0;
+  }
+
+  .timeline__heading {
+    font-family: var(--font-display);
+    font-size: $text-lg;
+    color: var(--cyan);
+    text-transform: uppercase;
+    letter-spacing: $tracking-pixel;
+    margin: 0 0 $space-5;
+  }
+
+  .timeline__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    border-left: 4px solid var(--border);
+  }
+
+  .timeline__item {
+    position: relative;
+    padding: 0 0 $space-5 $space-6;
+    display: grid;
+    grid-template-columns: auto auto 1fr;
+    gap: $space-3;
+    align-items: baseline;
+  }
+
+  .timeline__year {
+    font-family: var(--font-display);
+    font-size: $text-xs;
+    color: var(--green);
+    letter-spacing: $tracking-pixel;
+  }
+
+  .timeline__icon {
+    font-size: $text-base;
+  }
+
+  .timeline__body {
+    grid-column: 1 / -1;
+    margin-top: $space-1;
+  }
+
+  .timeline__title {
+    font-family: var(--font-code);
+    font-size: $text-base;
+    color: var(--text);
+    margin: 0 0 $space-1;
+    text-transform: uppercase;
+    letter-spacing: $tracking-pixel;
+  }
+
+  .timeline__desc {
+    font-family: var(--font-body);
+    font-size: $text-sm;
+    color: var(--text-muted);
+    line-height: $leading-normal;
+    margin: 0;
+  }
+
+  @media (min-width: 720px) {
+    .timeline__item {
+      grid-template-columns: 80px auto 1fr;
+    }
+    .timeline__body {
+      grid-column: 3;
+      margin-top: 0;
+    }
+  }
+</style>

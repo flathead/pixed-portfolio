@@ -1,15 +1,47 @@
 ---
-import { SITE } from '../../lib/site-config';
+import { SITE, NAV_LINKS } from '../../lib/site-config';
+import LangSwitcher from './LangSwitcher.astro';
+import ThemeTweakerBtn from './ThemeTweakerBtn.astro';
+
+const currentPath = Astro.url.pathname;
+
+function isActive(href: string): boolean {
+  if (href === '/') return currentPath === '/';
+  return currentPath.startsWith(href);
+}
 ---
 
 <header class="header">
   <div class="container header__inner">
     <a href="/" class="header__brand">[ {SITE.author}.dev ]</a>
+
+    <nav class="header__nav" aria-label="Main">
+      <ul class="header__list">
+        {
+          NAV_LINKS.map((link) => (
+            <li>
+              <a
+                href={link.href}
+                class:list={['header__link', { 'is-active': isActive(link.href) }]}
+              >
+                {link.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <div class="header__tools">
+      <LangSwitcher />
+      <ThemeTweakerBtn />
+    </div>
   </div>
 </header>
 
 <style lang="scss">
   @use '../../styles/tokens' as *;
+  @use '../../styles/mixins' as m;
 
   .header {
     position: sticky;
@@ -24,6 +56,7 @@ import { SITE } from '../../lib/site-config';
     align-items: center;
     justify-content: space-between;
     padding: $space-3 0;
+    gap: $space-5;
   }
 
   .header__brand {
@@ -33,5 +66,53 @@ import { SITE } from '../../lib/site-config';
     letter-spacing: $tracking-pixel;
     text-transform: uppercase;
     text-decoration: none;
+    white-space: nowrap;
+  }
+
+  .header__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: $space-5;
+  }
+
+  .header__link {
+    @include m.nav-prefix-on-hover;
+    font-family: var(--font-code);
+    font-size: $text-sm;
+    color: var(--text);
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: $tracking-pixel;
+
+    &.is-active {
+      color: var(--green);
+
+      &::before {
+        opacity: 1;
+      }
+    }
+
+    &:hover {
+      color: var(--cyan);
+    }
+  }
+
+  .header__tools {
+    display: flex;
+    gap: $space-3;
+    align-items: center;
+  }
+
+  @media (max-width: 720px) {
+    .header__list {
+      gap: $space-3;
+      font-size: 12px;
+    }
+
+    .header__inner {
+      gap: $space-3;
+    }
   }
 </style>

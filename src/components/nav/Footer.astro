@@ -5,14 +5,17 @@ const year = new Date().getFullYear();
 
 <footer class="footer">
   <div class="container footer__inner">
-    <span>© {SITE.copyrightStart}–{year} {SITE.author}</span>
-    <span class="footer__links">
-      <a href={CONTACT.github}>github</a>
+    <span class="footer__copyright">
+      © {SITE.copyrightStart}–{year}
+      {SITE.author}
+    </span>
+    <nav class="footer__links" aria-label="Внешние ссылки">
+      <a href={CONTACT.github} rel="me noopener" target="_blank">github</a>
       <span aria-hidden="true">·</span>
-      <a href={CONTACT.telegram}>telegram</a>
+      <a href={CONTACT.telegram} rel="noopener" target="_blank">telegram</a>
       <span aria-hidden="true">·</span>
       <a href={`mailto:${CONTACT.email}`}>email</a>
-    </span>
+    </nav>
   </div>
 </footer>
 
@@ -22,20 +25,46 @@ const year = new Date().getFullYear();
   .footer {
     margin-top: $space-9;
     border-top: 4px solid var(--border);
+    background: var(--surface);
   }
 
   .footer__inner {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: $space-3;
     padding: $space-5 0;
     font-family: var(--font-code);
     font-size: $text-sm;
     color: var(--text-muted);
   }
 
+  .footer__copyright {
+    text-transform: uppercase;
+    letter-spacing: $tracking-pixel;
+  }
+
   .footer__links {
-    display: inline-flex;
+    display: flex;
     gap: $space-2;
+    align-items: center;
+
+    a {
+      color: var(--text-muted);
+      text-decoration: none;
+      text-transform: uppercase;
+      letter-spacing: $tracking-pixel;
+
+      &:hover {
+        color: var(--cyan);
+      }
+    }
+  }
+
+  @media (max-width: 480px) {
+    .footer__inner {
+      flex-direction: column;
+      align-items: flex-start;
+    }
   }
 </style>

@@ -1,0 +1,280 @@
+---
+import { Image } from 'astro:assets';
+import { getCollection, render } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
+import MainLayout from '../../layouts/MainLayout.astro';
+import PixelButton from '../../components/ui/PixelButton.astro';
+import PixelDivider from '../../components/ui/PixelDivider.astro';
+import ComplexityStars from '../../components/ui/ComplexityStars.astro';
+import TechBadge from '../../components/ui/TechBadge.astro';
+import QuestLog from '../../components/ui/QuestLog.astro';
+
+import * as MdxComponents from '../../components/mdx';
+
+export async function getStaticPaths() {
+  const projects = await getCollection('projects');
+  return projects.map((project: CollectionEntry<'projects'>) => ({
+    params: { slug: project.data.slug },
+    props: { project },
+  }));
+}
+
+interface Props {
+  project: CollectionEntry<'projects'>;
+}
+
+const { project } = Astro.props;
+const { Content } = await render(project);
+
+const statusLabel: Record<typeof project.data.status, string> = {
+  completed: 'Завершён',
+  in_progress: 'В работе',
+  archived: 'Архив',
+};
+---
+
+<MainLayout title={`${project.data.title} — flathead`} description={project.data.summary}>
+  <article class="project container">
+    <header class="project__head">
+      <a href="/projects/" class="project__back">← все проекты</a>
+
+      <h1 class="project__title">{project.data.title}</h1>
+      <p class="project__summary">{project.data.summary}</p>
+    </header>
+
+    <div class="project__cover">
+      <Image src={project.data.cover} alt={project.data.title} />
+    </div>
+
+    <dl class="project__specs">
+      <div>
+        <dt>Длительность</dt>
+        <dd>{project.data.duration}</dd>
+      </div>
+      <div>
+        <dt>Год</dt>
+        <dd>{project.data.year}</dd>
+      </div>
+      {
+        project.data.client && (
+          <div>
+            <dt>Клиент</dt>
+            <dd>{project.data.client}</dd>
+          </div>
+        )
+      }
+      <div>
+        <dt>Статус</dt>
+        <dd class={`project__status project__status--${project.data.status}`}>
+          {statusLabel[project.data.status]}
+        </dd>
+      </div>
+      <div>
+        <dt>Сложность</dt>
+        <dd>
+          <ComplexityStars value={project.data.complexity} label="" />
+        </dd>
+      </div>
+    </dl>
+
+    <div class="project__tags">
+      {project.data.tech.map((t: string) => <TechBadge>{t}</TechBadge>)}
+    </div>
+
+    {
+      project.data.liveUrl && (
+        <div class="project__cta">
+          <PixelButton href={project.data.liveUrl}>Открыть live</PixelButton>
+          {project.data.repoUrl && (
+            <PixelButton href={project.data.repoUrl} variant="secondary">
+              Исходники
+            </PixelButton>
+          )}
+        </div>
+      )
+    }
+
+    <PixelDivider accent="green" />
+
+    <div class="project__body">
+      <Content components={MdxComponents} />
+    </div>
+
+    {
+      project.data.questLog && (
+        <>
+          <PixelDivider accent="cyan" />
+          <QuestLog
+            problem={project.data.questLog.problem}
+            stack={project.data.questLog.stack}
+            outcome={project.data.questLog.outcome}
+            learned={project.data.questLog.learned}
+          />
+        </>
+      )
+    }
+  </article>
+</MainLayout>
+
+<style lang="scss">
+  @use '../../styles/tokens' as *;
+
+  .project {
+    padding: $space-6 0;
+    max-width: 880px;
+  }
+
+  .project__back {
+    font-family: var(--font-code);
+    font-size: $text-sm;
+    color: var(--text-muted);
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: $tracking-pixel;
+
+    &:hover {
+      color: var(--cyan);
+    }
+  }
+
+  .project__title {
+    font-family: var(--font-display);
+    font-size: clamp(24px, 4vw, $display-lg);
+    color: var(--green);
+    text-transform: uppercase;
+    letter-spacing: $tracking-pixel;
+    line-height: $leading-tight;
+    margin: $space-3 0 $space-4;
+  }
+
+  .project__summary {
+    font-family: var(--font-body);
+    font-size: $text-lg;
+    color: var(--text);
+    line-height: $leading-normal;
+    margin: 0 0 $space-6;
+    max-width: 70ch;
+  }
+
+  .project__cover {
+    margin: 0 0 $space-6;
+    border: 4px solid var(--border);
+  }
+
+  .project__cover :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .project__specs {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: $space-4;
+    margin: 0 0 $space-5;
+    padding: $space-4;
+    background: var(--surface-2);
+    border: 2px solid var(--border);
+
+    div {
+      display: flex;
+      flex-direction: column;
+      gap: $space-1;
+    }
+
+    dt {
+      font-family: var(--font-code);
+      font-size: $text-xs;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: $tracking-wide;
+    }
+
+    dd {
+      font-family: var(--font-code);
+      font-size: $text-sm;
+      color: var(--text);
+      margin: 0;
+    }
+  }
+
+  .project__status--completed {
+    color: var(--green);
+  }
+  .project__status--in_progress {
+    color: var(--yellow);
+  }
+  .project__status--archived {
+    color: var(--text-muted);
+  }
+
+  .project__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $space-2;
+    margin: 0 0 $space-5;
+  }
+
+  .project__cta {
+    display: flex;
+    gap: $space-4;
+    margin: 0 0 $space-6;
+  }
+
+  .project__body {
+    color: var(--text);
+    line-height: $leading-normal;
+
+    :global(h2) {
+      font-family: var(--font-display);
+      font-size: $text-base;
+      color: var(--cyan);
+      text-transform: uppercase;
+      margin: $space-6 0 $space-3;
+    }
+
+    :global(h3) {
+      font-family: var(--font-code);
+      font-size: $text-base;
+      color: var(--text);
+      text-transform: uppercase;
+      margin: $space-5 0 $space-3;
+    }
+
+    :global(p) {
+      margin: 0 0 $space-4;
+    }
+
+    :global(ul),
+    :global(ol) {
+      margin: 0 0 $space-4 $space-5;
+    }
+
+    :global(strong) {
+      color: var(--green);
+    }
+
+    :global(code) {
+      font-family: var(--font-code);
+      font-size: 0.9em;
+      color: var(--cyan);
+      background: var(--surface-2);
+      padding: 2px 6px;
+      border: 1px solid var(--border);
+    }
+
+    :global(pre) {
+      background: var(--surface-2);
+      border: 2px solid var(--border);
+      padding: $space-4;
+      margin: $space-4 0;
+      overflow-x: auto;
+
+      code {
+        background: none;
+        border: none;
+        padding: 0;
+      }
+    }
+  }
+</style>

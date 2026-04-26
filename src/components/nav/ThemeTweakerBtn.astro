@@ -1,0 +1,24 @@
+---
+// M2 placeholder: button without behavior. Real theme picker is an M3 island.
+---
+
+<button class="theme-btn" type="button" aria-label="Theme settings (coming soon)" disabled>
+  ⚙
+</button>
+
+<style lang="scss">
+  @use '../../styles/tokens' as *;
+
+  .theme-btn {
+    background: transparent;
+    border: none;
+    cursor: not-allowed;
+    color: var(--text-muted);
+    font-size: $text-base;
+    padding: $space-1;
+
+    &:hover {
+      color: var(--green);
+    }
+  }
+</style>

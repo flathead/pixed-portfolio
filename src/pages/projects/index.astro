@@ -1,0 +1,55 @@
+---
+import { getCollection } from 'astro:content';
+import MainLayout from '../../layouts/MainLayout.astro';
+import ProjectsGrid from '../../components/sections/ProjectsGrid.astro';
+
+const projects = await getCollection('projects');
+const sorted = [...projects].sort((a, b) => a.data.order - b.data.order);
+---
+
+<MainLayout
+  title="Проекты — flathead"
+  description="Все проекты флэтхеда: e-commerce, CRM, телеграм-боты."
+>
+  <div class="container projects-page">
+    <header class="projects-page__head">
+      <span class="projects-page__label">// АРХИВ КВЕСТОВ</span>
+      <h1 class="projects-page__title">Проекты</h1>
+      <p class="projects-page__count">{sorted.length} проектов завершено</p>
+    </header>
+  </div>
+
+  <ProjectsGrid projects={sorted} showHeading={false} />
+</MainLayout>
+
+<style lang="scss">
+  @use '../../styles/tokens' as *;
+
+  .projects-page {
+    padding: $space-6 0 0;
+  }
+
+  .projects-page__label {
+    font-family: var(--font-code);
+    font-size: $text-sm;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: $tracking-wide;
+  }
+
+  .projects-page__title {
+    font-family: var(--font-display);
+    font-size: $display-lg;
+    color: var(--green);
+    text-transform: uppercase;
+    letter-spacing: $tracking-pixel;
+    line-height: $leading-tight;
+    margin: $space-2 0 $space-3;
+  }
+
+  .projects-page__count {
+    font-family: var(--font-code);
+    font-size: $text-sm;
+    color: var(--text-muted);
+  }
+</style>

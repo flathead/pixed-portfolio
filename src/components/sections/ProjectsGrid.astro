@@ -1,0 +1,129 @@
+---
+import { Image } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
+import PixelCard from '../ui/PixelCard.astro';
+import TechBadge from '../ui/TechBadge.astro';
+import ComplexityStars from '../ui/ComplexityStars.astro';
+
+interface Props {
+  projects: CollectionEntry<'projects'>[];
+  showHeading?: boolean;
+  heading?: string;
+  limit?: number;
+}
+
+const { projects, showHeading = true, heading = '// КВЕСТЫ', limit } = Astro.props;
+const list = limit ? projects.slice(0, limit) : projects;
+---
+
+<section class="projects">
+  <div class="container">
+    {showHeading && <h2 class="projects__heading">{heading}</h2>}
+
+    <ul class="projects__grid">
+      {
+        list.map((project) => {
+          const slug = project.data.slug;
+          return (
+            <li>
+              <PixelCard href={`/projects/${slug}/`} accent="border" class="projects__card">
+                <div class="projects__cover">
+                  <Image src={project.data.cover} alt={project.data.title} loading="lazy" />
+                </div>
+                <h3 class="projects__title">{project.data.title}</h3>
+                <p class="projects__summary">{project.data.summary}</p>
+
+                <div class="projects__meta">
+                  <ComplexityStars value={project.data.complexity} />
+                  <span class="projects__year">{project.data.year}</span>
+                </div>
+
+                <div class="projects__tags">
+                  {project.data.tech.slice(0, 4).map((t: string) => (
+                    <TechBadge>{t}</TechBadge>
+                  ))}
+                </div>
+              </PixelCard>
+            </li>
+          );
+        })
+      }
+    </ul>
+  </div>
+</section>
+
+<style lang="scss">
+  @use '../../styles/tokens' as *;
+
+  .projects {
+    padding: $space-7 0;
+  }
+
+  .projects__heading {
+    font-family: var(--font-display);
+    font-size: $text-lg;
+    color: var(--cyan);
+    text-transform: uppercase;
+    letter-spacing: $tracking-pixel;
+    margin: 0 0 $space-5;
+  }
+
+  .projects__grid {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: $space-5;
+  }
+
+  .projects__cover {
+    margin: -$card-pad -$card-pad $space-4;
+    border-bottom: 4px solid var(--border);
+    overflow: hidden;
+  }
+
+  .projects__cover :global(img) {
+    display: block;
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+  }
+
+  .projects__title {
+    font-family: var(--font-display);
+    font-size: $text-sm;
+    color: var(--green);
+    text-transform: uppercase;
+    letter-spacing: $tracking-pixel;
+    line-height: $leading-tight;
+    margin: 0 0 $space-3;
+  }
+
+  .projects__summary {
+    color: var(--text);
+    font-size: $text-sm;
+    line-height: $leading-normal;
+    margin: 0 0 $space-4;
+    min-height: 4em;
+  }
+
+  .projects__meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: $space-3;
+
+    .projects__year {
+      font-family: var(--font-code);
+      font-size: $text-sm;
+      color: var(--text-muted);
+    }
+  }
+
+  .projects__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $space-2;
+  }
+</style>

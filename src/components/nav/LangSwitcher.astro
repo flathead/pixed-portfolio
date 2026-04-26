@@ -1,0 +1,42 @@
+---
+import { getLocale } from '../../lib/i18n';
+const locale = getLocale(Astro.url);
+const otherLocale = locale === 'ru' ? 'en' : 'ru';
+const otherHref = locale === 'ru' ? '/en/' : '/';
+---
+
+<a href={otherHref} class="lang-switcher" data-current={locale}>
+  <span class="lang-switcher__current">{locale.toUpperCase()}</span>
+  <span class="lang-switcher__sep" aria-hidden="true">|</span>
+  <span class="lang-switcher__other">{otherLocale.toUpperCase()}</span>
+</a>
+
+<style lang="scss">
+  @use '../../styles/tokens' as *;
+
+  .lang-switcher {
+    display: var(--lang-switcher-display, none);
+    font-family: var(--font-code);
+    font-size: $text-sm;
+    color: var(--text-muted);
+    text-decoration: none;
+    letter-spacing: $tracking-wide;
+  }
+
+  :root {
+    --lang-switcher-display: none;
+  }
+
+  .lang-switcher__current {
+    color: var(--green);
+  }
+
+  .lang-switcher__sep {
+    margin: 0 $space-1;
+    color: var(--border-bright);
+  }
+
+  .lang-switcher__other:hover {
+    color: var(--cyan);
+  }
+</style>
