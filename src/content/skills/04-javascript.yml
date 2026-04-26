@@ -1,0 +1,5 @@
+name: JavaScript
+value: 65
+category: frontend
+color: 'var(--yellow)'
+order: 4

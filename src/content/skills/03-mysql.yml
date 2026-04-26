@@ -1,0 +1,5 @@
+name: MySQL
+value: 80
+category: backend
+color: 'var(--cyan)'
+order: 3

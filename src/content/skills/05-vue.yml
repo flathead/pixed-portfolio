@@ -1,0 +1,5 @@
+name: Vue.js
+value: 55
+category: frontend
+color: 'var(--yellow)'
+order: 5

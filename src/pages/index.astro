@@ -1,5 +1,11 @@
 ---
+import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
+
+const projects = await getCollection('projects');
+const skills = await getCollection('skills');
+const timeline = await getCollection('timeline');
+const site = await getCollection('site');
 
 const buildTime = new Date().toISOString();
 ---
@@ -14,8 +20,20 @@ const buildTime = new Date().toISOString();
     <p style="margin-top: var(--space-5); color: var(--text);">
       Astro skeleton deployed. Real homepage lands in M2.
     </p>
+
+    <ul
+      style="margin-top: var(--space-6); padding: var(--space-5); border: 4px solid var(--border); list-style: none; color: var(--text-muted); font-family: var(--font-code); font-size: var(--text-sm); line-height: 2;"
+    >
+      <li>Projects loaded: <strong style="color: var(--green)">{projects.length}</strong></li>
+      <li>Skills loaded: <strong style="color: var(--green)">{skills.length}</strong></li>
+      <li>
+        Timeline entries loaded: <strong style="color: var(--green)">{timeline.length}</strong>
+      </li>
+      <li>Site singletons loaded: <strong style="color: var(--green)">{site.length}</strong></li>
+    </ul>
+
     <p
-      style="margin-top: var(--space-2); color: var(--text-muted); font-family: var(--font-code); font-size: var(--text-sm);"
+      style="margin-top: var(--space-5); color: var(--text-muted); font-family: var(--font-code); font-size: var(--text-sm);"
     >
       Build: {buildTime}
     </p>

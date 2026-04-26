@@ -1,0 +1,5 @@
+name: Git
+value: 85
+category: tools
+color: 'var(--cyan)'
+order: 8

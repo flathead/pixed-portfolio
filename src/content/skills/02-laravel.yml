@@ -1,0 +1,5 @@
+name: Laravel
+value: 88
+category: backend
+color: 'var(--green)'
+order: 2

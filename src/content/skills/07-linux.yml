@@ -1,0 +1,5 @@
+name: Linux / CLI
+value: 78
+category: devops
+color: 'var(--purple)'
+order: 7
