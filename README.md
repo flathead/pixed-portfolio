@@ -3,7 +3,7 @@
 Personal portfolio for a PHP developer — pixel-art aesthetic, storytelling-driven.
 
 **Live:** https://flathead.is-a.dev (after M1 completion)
-**Stack:** Astro 5 · Svelte islands · MDX · SCSS · Sveltia CMS · Cloudflare Pages
+**Stack:** Astro 6 · Svelte islands · MDX · SCSS · Sveltia CMS · Cloudflare Pages
 
 ## Status
 
