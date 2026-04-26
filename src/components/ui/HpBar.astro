@@ -1,0 +1,75 @@
+---
+interface Props {
+  label: string;
+  value: number;
+  color?: 'green' | 'cyan' | 'magenta' | 'yellow' | 'purple';
+}
+
+const { label, value, color = 'green' } = Astro.props;
+const clamped = Math.max(0, Math.min(100, Math.round(value)));
+---
+
+<div class="hp-bar" data-color={color}>
+  <div class="hp-bar__head">
+    <span class="hp-bar__label">{label}</span>
+    <span class="hp-bar__value">{clamped}/100</span>
+  </div>
+  <div class="hp-bar__track" style={`--fill: ${clamped}%;`}>
+    <div class="hp-bar__fill"></div>
+  </div>
+</div>
+
+<style lang="scss">
+  @use '../../styles/tokens' as *;
+
+  .hp-bar {
+    display: flex;
+    flex-direction: column;
+    gap: $space-2;
+  }
+
+  .hp-bar__head {
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--font-code);
+    font-size: $text-sm;
+  }
+
+  .hp-bar__label {
+    color: var(--text);
+    text-transform: uppercase;
+    letter-spacing: $tracking-pixel;
+  }
+
+  .hp-bar__value {
+    color: var(--text-muted);
+  }
+
+  .hp-bar__track {
+    position: relative;
+    width: 100%;
+    height: 16px;
+    background: var(--surface-2);
+    border: 2px solid var(--border);
+  }
+
+  .hp-bar__fill {
+    width: var(--fill, 0%);
+    height: 100%;
+    background: var(--green);
+    transition: width 800ms steps(8);
+  }
+
+  .hp-bar[data-color='cyan'] .hp-bar__fill {
+    background: var(--cyan);
+  }
+  .hp-bar[data-color='magenta'] .hp-bar__fill {
+    background: var(--magenta);
+  }
+  .hp-bar[data-color='yellow'] .hp-bar__fill {
+    background: var(--yellow);
+  }
+  .hp-bar[data-color='purple'] .hp-bar__fill {
+    background: var(--purple);
+  }
+</style>

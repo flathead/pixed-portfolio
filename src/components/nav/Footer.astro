@@ -1,0 +1,41 @@
+---
+import { SITE, CONTACT } from '../../lib/site-config';
+const year = new Date().getFullYear();
+---
+
+<footer class="footer">
+  <div class="container footer__inner">
+    <span>© {SITE.copyrightStart}–{year} {SITE.author}</span>
+    <span class="footer__links">
+      <a href={CONTACT.github}>github</a>
+      <span aria-hidden="true">·</span>
+      <a href={CONTACT.telegram}>telegram</a>
+      <span aria-hidden="true">·</span>
+      <a href={`mailto:${CONTACT.email}`}>email</a>
+    </span>
+  </div>
+</footer>
+
+<style lang="scss">
+  @use '../../styles/tokens' as *;
+
+  .footer {
+    margin-top: $space-9;
+    border-top: 4px solid var(--border);
+  }
+
+  .footer__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: $space-5 0;
+    font-family: var(--font-code);
+    font-size: $text-sm;
+    color: var(--text-muted);
+  }
+
+  .footer__links {
+    display: inline-flex;
+    gap: $space-2;
+  }
+</style>

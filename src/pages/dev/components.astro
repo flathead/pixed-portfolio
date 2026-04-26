@@ -1,0 +1,140 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';
+import PixelCard from '../../components/ui/PixelCard.astro';
+import PixelButton from '../../components/ui/PixelButton.astro';
+import PixelDivider from '../../components/ui/PixelDivider.astro';
+import TechBadge from '../../components/ui/TechBadge.astro';
+import ComplexityStars from '../../components/ui/ComplexityStars.astro';
+import HpBar from '../../components/ui/HpBar.astro';
+import QuestLog from '../../components/ui/QuestLog.astro';
+
+import Spoiler from '../../components/mdx/Spoiler.astro';
+import Callout from '../../components/mdx/Callout.astro';
+import Quest from '../../components/mdx/Quest.astro';
+---
+
+<MainLayout title="Components — pixed-portfolio">
+  <div class="container showcase">
+    <h1 class="showcase__title">// COMPONENTS SHOWCASE</h1>
+
+    <section class="showcase__section">
+      <h2>PixelCard</h2>
+      <div class="showcase__row">
+        <PixelCard accent="border">Default card</PixelCard>
+        <PixelCard accent="green">Green accent</PixelCard>
+        <PixelCard accent="cyan">Cyan accent</PixelCard>
+        <PixelCard href="#" accent="magenta">Clickable</PixelCard>
+      </div>
+    </section>
+
+    <PixelDivider accent="green" spacing="md" />
+
+    <section class="showcase__section">
+      <h2>PixelButton</h2>
+      <div class="showcase__row">
+        <PixelButton>Primary</PixelButton>
+        <PixelButton variant="secondary">Secondary</PixelButton>
+        <PixelButton variant="danger">Danger</PixelButton>
+        <PixelButton href="/projects/">Link variant</PixelButton>
+        <PixelButton disabled>Disabled</PixelButton>
+      </div>
+    </section>
+
+    <PixelDivider accent="cyan" />
+
+    <section class="showcase__section">
+      <h2>TechBadge / ComplexityStars</h2>
+      <div class="showcase__row">
+        <TechBadge>php</TechBadge>
+        <TechBadge accent="green">laravel</TechBadge>
+        <TechBadge accent="cyan">mysql</TechBadge>
+        <TechBadge accent="yellow">vue</TechBadge>
+        <TechBadge accent="magenta">redis</TechBadge>
+      </div>
+      <div class="showcase__row">
+        <ComplexityStars value={1} />
+        <ComplexityStars value={3} />
+        <ComplexityStars value={5} />
+      </div>
+    </section>
+
+    <PixelDivider accent="yellow" />
+
+    <section class="showcase__section">
+      <h2>HpBar</h2>
+      <HpBar label="PHP" value={92} color="green" />
+      <HpBar label="MySQL" value={80} color="cyan" />
+      <HpBar label="Docker" value={70} color="magenta" />
+    </section>
+
+    <PixelDivider accent="magenta" />
+
+    <section class="showcase__section">
+      <h2>QuestLog</h2>
+      <QuestLog
+        problem="Демо-проблема для проверки рендера."
+        stack={['php-8.2', 'laravel', 'redis']}
+        outcome="Демо-исход с конкретным результатом."
+        learned="Что-то полезное."
+      />
+    </section>
+
+    <PixelDivider accent="purple" />
+
+    <section class="showcase__section">
+      <h2>MDX components</h2>
+      <Spoiler title="Открыть подробности">
+        <p>Содержимое спойлера. Сюда можно положить любой контент.</p>
+      </Spoiler>
+
+      <Callout type="info">Это info-блок.</Callout>
+      <Callout type="warning">Это warning-блок.</Callout>
+      <Callout type="success">Это success-блок.</Callout>
+      <Callout type="danger">Это danger-блок.</Callout>
+
+      <Quest status="completed" title="Демо-квест">
+        <p>Описание демонстрационного квеста.</p>
+      </Quest>
+      <Quest status="in_progress" title="Активный квест">
+        <p>Описание активного квеста.</p>
+      </Quest>
+    </section>
+  </div>
+</MainLayout>
+
+<style lang="scss">
+  @use '../../styles/tokens' as *;
+
+  .showcase {
+    padding: $space-6 0;
+  }
+
+  .showcase__title {
+    font-family: var(--font-display);
+    font-size: $text-xl;
+    color: var(--green);
+    text-transform: uppercase;
+    letter-spacing: $tracking-pixel;
+    margin-bottom: $space-7;
+  }
+
+  .showcase__section {
+    margin-bottom: $space-7;
+
+    h2 {
+      font-family: var(--font-display);
+      font-size: $text-base;
+      color: var(--cyan);
+      text-transform: uppercase;
+      margin-bottom: $space-4;
+    }
+  }
+
+  .showcase__row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $space-4;
+    margin-bottom: $space-4;
+    align-items: center;
+  }
+</style>

@@ -1,0 +1,13 @@
+---
+import UiTechBadge from '../ui/TechBadge.astro';
+
+interface Props {
+  accent?: 'purple' | 'green' | 'cyan' | 'yellow' | 'magenta';
+}
+
+const props = Astro.props;
+---
+
+<UiTechBadge {...props}>
+  <slot />
+</UiTechBadge>

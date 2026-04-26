@@ -1,0 +1,30 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import Header from '../components/nav/Header.astro';
+import Footer from '../components/nav/Footer.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+  ogImage?: string;
+}
+
+const { title, description, ogImage } = Astro.props;
+---
+
+<BaseLayout title={title} description={description} ogImage={ogImage}>
+  <Header />
+  <main class="page">
+    <slot />
+  </main>
+  <Footer />
+</BaseLayout>
+
+<style lang="scss">
+  @use '../styles/tokens' as *;
+
+  .page {
+    min-height: calc(100vh - 200px);
+    padding: $space-6 0 $space-9;
+  }
+</style>

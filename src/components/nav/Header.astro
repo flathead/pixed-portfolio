@@ -1,0 +1,37 @@
+---
+import { SITE } from '../../lib/site-config';
+---
+
+<header class="header">
+  <div class="container header__inner">
+    <a href="/" class="header__brand">[ {SITE.author}.dev ]</a>
+  </div>
+</header>
+
+<style lang="scss">
+  @use '../../styles/tokens' as *;
+
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: var(--bg);
+    border-bottom: 4px solid var(--border);
+  }
+
+  .header__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: $space-3 0;
+  }
+
+  .header__brand {
+    font-family: var(--font-display);
+    font-size: $text-xs;
+    color: var(--green);
+    letter-spacing: $tracking-pixel;
+    text-transform: uppercase;
+    text-decoration: none;
+  }
+</style>

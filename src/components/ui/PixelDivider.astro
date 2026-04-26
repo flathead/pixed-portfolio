@@ -1,0 +1,45 @@
+---
+interface Props {
+  accent?: 'border' | 'green' | 'cyan' | 'magenta' | 'yellow' | 'purple';
+  spacing?: 'sm' | 'md' | 'lg';
+}
+
+const { accent = 'border', spacing = 'md' } = Astro.props;
+---
+
+<hr class:list={['pixel-divider', `pixel-divider--${spacing}`]} data-accent={accent} />
+
+<style lang="scss">
+  @use '../../styles/tokens' as *;
+
+  .pixel-divider {
+    border: none;
+    border-top: 4px solid var(--border);
+
+    &[data-accent='green'] {
+      border-color: var(--green);
+    }
+    &[data-accent='cyan'] {
+      border-color: var(--cyan);
+    }
+    &[data-accent='magenta'] {
+      border-color: var(--magenta);
+    }
+    &[data-accent='yellow'] {
+      border-color: var(--yellow);
+    }
+    &[data-accent='purple'] {
+      border-color: var(--purple);
+    }
+
+    &--sm {
+      margin: $space-5 0;
+    }
+    &--md {
+      margin: $space-7 0;
+    }
+    &--lg {
+      margin: $space-9 0;
+    }
+  }
+</style>

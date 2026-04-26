@@ -1,0 +1,39 @@
+---
+interface Props {
+  href?: string;
+  accent?: 'border' | 'green' | 'cyan' | 'magenta' | 'yellow' | 'purple';
+  class?: string;
+}
+
+const { href, accent = 'border', class: className } = Astro.props;
+const Tag = href ? 'a' : 'div';
+const accentVar = `var(--${accent === 'border' ? 'border' : accent})`;
+---
+
+<Tag
+  href={href}
+  class:list={['pixel-card', `pixel-card--${accent}`, className]}
+  style={`--card-accent: ${accentVar};`}
+>
+  <slot />
+</Tag>
+
+<style lang="scss">
+  @use '../../styles/tokens' as *;
+  @use '../../styles/mixins' as m;
+
+  .pixel-card {
+    @include m.pixel-card;
+    display: block;
+    padding: $card-pad;
+    color: inherit;
+    text-decoration: none;
+    border-color: var(--card-accent);
+    box-shadow: $shadow-pixel-md var(--card-accent);
+
+    &:hover {
+      border-color: var(--cyan);
+      box-shadow: $shadow-pixel-lg var(--cyan);
+    }
+  }
+</style>

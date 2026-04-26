@@ -1,0 +1,48 @@
+---
+interface Props {
+  title?: string;
+}
+const { title = 'Подробнее' } = Astro.props;
+---
+
+<details class="spoiler">
+  <summary class="spoiler__summary">▶ {title}</summary>
+  <div class="spoiler__body">
+    <slot />
+  </div>
+</details>
+
+<style lang="scss">
+  @use '../../styles/tokens' as *;
+
+  .spoiler {
+    margin: $space-4 0;
+    border: 2px solid var(--border);
+    background: var(--surface-2);
+
+    &[open] .spoiler__summary::before {
+      transform: rotate(90deg);
+    }
+  }
+
+  .spoiler__summary {
+    cursor: pointer;
+    padding: $space-3 $space-4;
+    font-family: var(--font-display);
+    font-size: $text-xs;
+    color: var(--cyan);
+    text-transform: uppercase;
+    letter-spacing: $tracking-pixel;
+    list-style: none;
+    user-select: none;
+
+    &::-webkit-details-marker {
+      display: none;
+    }
+  }
+
+  .spoiler__body {
+    padding: 0 $space-4 $space-4;
+    color: var(--text);
+  }
+</style>

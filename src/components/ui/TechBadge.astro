@@ -1,0 +1,37 @@
+---
+interface Props {
+  accent?: 'purple' | 'green' | 'cyan' | 'yellow' | 'magenta';
+}
+
+const { accent = 'purple' } = Astro.props;
+---
+
+<span class="tech-badge" data-accent={accent}>
+  <slot />
+</span>
+
+<style lang="scss">
+  @use '../../styles/tokens' as *;
+  @use '../../styles/mixins' as m;
+
+  .tech-badge {
+    @include m.pixel-tag($color-purple);
+
+    &[data-accent='green'] {
+      color: var(--green);
+      border-color: var(--green);
+    }
+    &[data-accent='cyan'] {
+      color: var(--cyan);
+      border-color: var(--cyan);
+    }
+    &[data-accent='yellow'] {
+      color: var(--yellow);
+      border-color: var(--yellow);
+    }
+    &[data-accent='magenta'] {
+      color: var(--magenta);
+      border-color: var(--magenta);
+    }
+  }
+</style>

@@ -1,0 +1,65 @@
+---
+interface Props {
+  type?: 'info' | 'warning' | 'success' | 'danger';
+}
+const { type = 'info' } = Astro.props;
+
+const ICON_MAP = {
+  info: 'ⓘ',
+  warning: '⚠',
+  success: '✓',
+  danger: '✗',
+} as const;
+---
+
+<aside class="callout" data-type={type}>
+  <span class="callout__icon" aria-hidden="true">{ICON_MAP[type]}</span>
+  <div class="callout__body">
+    <slot />
+  </div>
+</aside>
+
+<style lang="scss">
+  @use '../../styles/tokens' as *;
+
+  .callout {
+    display: flex;
+    gap: $space-3;
+    padding: $space-4;
+    margin: $space-4 0;
+    border-left: 4px solid var(--cyan);
+    background: var(--surface-2);
+
+    &[data-type='warning'] {
+      border-color: var(--yellow);
+    }
+    &[data-type='success'] {
+      border-color: var(--green);
+    }
+    &[data-type='danger'] {
+      border-color: var(--magenta);
+    }
+  }
+
+  .callout__icon {
+    font-family: var(--font-display);
+    font-size: $text-base;
+    color: var(--cyan);
+
+    .callout[data-type='warning'] & {
+      color: var(--yellow);
+    }
+    .callout[data-type='success'] & {
+      color: var(--green);
+    }
+    .callout[data-type='danger'] & {
+      color: var(--magenta);
+    }
+  }
+
+  .callout__body {
+    flex: 1;
+    color: var(--text);
+    line-height: $leading-normal;
+  }
+</style>

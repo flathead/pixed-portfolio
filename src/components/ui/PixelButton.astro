@@ -1,0 +1,53 @@
+---
+interface Props {
+  href?: string;
+  type?: 'button' | 'submit' | 'reset';
+  variant?: 'primary' | 'secondary' | 'danger';
+  disabled?: boolean;
+  class?: string;
+}
+
+const {
+  href,
+  type = 'button',
+  variant = 'primary',
+  disabled = false,
+  class: className,
+} = Astro.props;
+
+const Tag = href ? 'a' : 'button';
+const tagProps = href ? { href } : { type, disabled };
+---
+
+<Tag {...tagProps} class:list={['pixel-btn', `pixel-btn--${variant}`, className]}>
+  <slot />
+</Tag>
+
+<style lang="scss">
+  @use '../../styles/tokens' as *;
+  @use '../../styles/mixins' as m;
+
+  .pixel-btn {
+    @include m.pixel-button($color-green);
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-family: var(--font-display);
+    text-decoration: none;
+    display: inline-block;
+
+    &:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    &--secondary {
+      @include m.pixel-button($color-cyan);
+    }
+
+    &--danger {
+      @include m.pixel-button($color-magenta);
+    }
+  }
+</style>

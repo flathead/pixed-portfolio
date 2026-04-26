@@ -1,0 +1,50 @@
+---
+interface Props {
+  value: number;
+  max?: number;
+  label?: string;
+}
+
+const { value, max = 5, label = 'Сложность' } = Astro.props;
+const filled = Math.max(0, Math.min(max, Math.round(value)));
+const empty = max - filled;
+---
+
+<span class="stars" aria-label={`${label}: ${filled} из ${max}`}>
+  {label && <span class="stars__label">{label}:</span>}
+  <span class="stars__row" aria-hidden="true">
+    {Array.from({ length: filled }).map(() => <span class="stars__filled">★</span>)}
+    {Array.from({ length: empty }).map(() => <span class="stars__empty">☆</span>)}
+  </span>
+</span>
+
+<style lang="scss">
+  @use '../../styles/tokens' as *;
+
+  .stars {
+    display: inline-flex;
+    align-items: center;
+    gap: $space-2;
+    font-family: var(--font-code);
+    font-size: $text-sm;
+  }
+
+  .stars__label {
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: $tracking-wide;
+  }
+
+  .stars__row {
+    letter-spacing: 4px;
+    color: var(--yellow);
+  }
+
+  .stars__filled {
+    color: var(--yellow);
+  }
+
+  .stars__empty {
+    color: var(--border-bright);
+  }
+</style>
