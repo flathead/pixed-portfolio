@@ -17,6 +17,10 @@
     "test:coverage": "vitest run --coverage",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
+    "new:project": "tsx scripts/new-project.ts",
+    "release:patch": "pnpm version patch",
+    "release:minor": "pnpm version minor",
+    "release:major": "pnpm version major",
     "astro": "astro"
   },
   "dependencies": {
@@ -43,6 +47,7 @@
     "prettier": "^3.8.3",
     "prettier-plugin-astro": "^0.14.1",
     "prettier-plugin-svelte": "^3.5.1",
+    "tsx": "^4.21.0",
     "typescript": "^6.0.3",
     "vitest": "^4.1.5"
   }

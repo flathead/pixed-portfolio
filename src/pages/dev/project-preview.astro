@@ -1,0 +1,279 @@
+---
+/**
+ * Dev-only preview page that exercises every visual variation of the
+ * project card and quest log without needing real content. Useful when
+ * editing UI atoms or when filling in a new project to see how each
+ * frontmatter combination renders.
+ */
+import type { CollectionEntry } from 'astro:content';
+
+import MainLayout from '../../layouts/MainLayout.astro';
+import PixelDivider from '../../components/ui/PixelDivider.astro';
+import QuestLog from '../../components/ui/QuestLog.astro';
+import ProjectsGrid from '../../components/sections/ProjectsGrid.astro';
+
+import avatar from '../../assets/avatar.jpg';
+
+type ProjectEntry = CollectionEntry<'projects'>;
+type ProjectData = ProjectEntry['data'];
+
+function mock(id: string, override: Partial<ProjectData>): ProjectEntry {
+  return {
+    id,
+    collection: 'projects',
+    body: '',
+    data: {
+      title: 'Mock Project',
+      slug: id,
+      summary: 'Дефолтный summary для превью. Перекройте через override во второй параметр mock().',
+      cover: avatar,
+      screenshots: [],
+      tech: ['php', 'laravel', 'mysql'],
+      complexity: 3,
+      duration: '3 месяца',
+      year: 2025,
+      status: 'completed',
+      featured: false,
+      order: 0,
+      ...override,
+    },
+  } as unknown as ProjectEntry;
+}
+
+const byStatus: ProjectEntry[] = [
+  mock('m-completed', { title: 'Status: completed', status: 'completed' }),
+  mock('m-in_progress', { title: 'Status: in_progress', status: 'in_progress' }),
+  mock('m-archived', { title: 'Status: archived', status: 'archived' }),
+];
+
+const byComplexity: ProjectEntry[] = [1, 2, 3, 4, 5].map((c) =>
+  mock(`m-c${c}`, { title: `Complexity ${c} / 5`, complexity: c as 1 | 2 | 3 | 4 | 5 }),
+);
+
+const byTechCount: ProjectEntry[] = [
+  mock('m-tech-1', { title: 'Tech: 1 tag', tech: ['php'] }),
+  mock('m-tech-4', { title: 'Tech: 4 tags', tech: ['php', 'laravel', 'mysql', 'redis'] }),
+  mock('m-tech-8', {
+    title: 'Tech: 8 tags',
+    tech: ['php', 'laravel', 'mysql', 'redis', 'docker', 'nginx', 'vue', 'tailwind'],
+  }),
+  mock('m-tech-12', {
+    title: 'Tech: 12 tags (over card limit)',
+    tech: [
+      'php',
+      'laravel',
+      'mysql',
+      'postgres',
+      'redis',
+      'docker',
+      'nginx',
+      'vue',
+      'tailwind',
+      'typescript',
+      'vitest',
+      'pest',
+    ],
+  }),
+];
+
+const bySummaryLength: ProjectEntry[] = [
+  mock('m-sum-short', {
+    title: 'Summary: short (40 chars)',
+    summary: 'Короткое описание ровно сорок символов.',
+  }),
+  mock('m-sum-mid', {
+    title: 'Summary: middle (100 chars)',
+    summary:
+      'Средний summary в сто символов даёт пример типичного описания. Примерно две полноценные строки.',
+  }),
+  mock('m-sum-max', {
+    title: 'Summary: max (200 chars)',
+    summary:
+      'Максимальный summary в 200 символов: проверяет минимум четыре строки. Длинное описание занимает значительную часть карточки и проверяет высоту блока. Стоит избегать такой длины.',
+  }),
+];
+
+const byFeatured: ProjectEntry[] = [
+  mock('m-feat-true', { title: 'Featured: true', featured: true, order: 1 }),
+  mock('m-feat-false', { title: 'Featured: false', featured: false, order: 999 }),
+];
+
+const QUEST_LOG_FULL = {
+  problem:
+    'Заказчик пришёл с устаревшим самописным движком, который падал три раза в день, и просил «как у Wildberries».',
+  stack: ['php-8.3', 'laravel-11', 'mysql-8', 'redis', 'docker', 'nginx'],
+  outcome: 'Время отклика главной страницы упало с 2.4с до 320мс. Конверсия выросла на 18%.',
+  learned: 'Pipeline-паттерн для системы скидок — лучшее решение, что я придумал.',
+};
+
+const QUEST_LOG_NO_LEARNED = {
+  problem: 'Те же 200 символов проблемы, но без поля learned — оно опциональное.',
+  stack: ['php', 'laravel'],
+  outcome: 'Те же 200 символов исхода, но без поля learned.',
+};
+
+const QUEST_LOG_SHORT_STACK = {
+  problem: 'Минимально допустимая длина проблемы — двадцать символов.',
+  stack: ['only-one'],
+  outcome: 'Минимальный исход в двадцать с лишним символов.',
+  learned: 'Что-то вынес.',
+};
+---
+
+<MainLayout title="Project preview — dev" description="Mocked project variants">
+  <div class="container preview">
+    <header class="preview__head">
+      <span class="preview__label">// DEV PREVIEW</span>
+      <h1 class="preview__title">Project preview</h1>
+      <p class="preview__intro">
+        Все варианты карточек проектов и QuestLog с моковыми данными. Используйте для проверки UI
+        перед добавлением реального контента или после правок атомов.
+      </p>
+    </header>
+
+    <section class="preview__section">
+      <h2 class="preview__h2">By status</h2>
+      <p class="preview__hint">3 значения <code>status</code> — отражается на странице проекта.</p>
+      <ProjectsGrid projects={byStatus} showHeading={false} />
+    </section>
+
+    <PixelDivider accent="green" />
+
+    <section class="preview__section">
+      <h2 class="preview__h2">By complexity (1–5)</h2>
+      <p class="preview__hint">Звёзды на карточке отражают <code>complexity</code>.</p>
+      <ProjectsGrid projects={byComplexity} showHeading={false} />
+    </section>
+
+    <PixelDivider accent="cyan" />
+
+    <section class="preview__section">
+      <h2 class="preview__h2">By tech tag count</h2>
+      <p class="preview__hint">
+        Карточка показывает первые 4 тега. Полный список — на странице проекта.
+      </p>
+      <ProjectsGrid projects={byTechCount} showHeading={false} />
+    </section>
+
+    <PixelDivider accent="yellow" />
+
+    <section class="preview__section">
+      <h2 class="preview__h2">By summary length (40–200 chars)</h2>
+      <p class="preview__hint">
+        Карточка имеет <code>min-height</code> на summary, поэтому короткий и длинный summary не должны
+        ломать сетку.
+      </p>
+      <ProjectsGrid projects={bySummaryLength} showHeading={false} />
+    </section>
+
+    <PixelDivider accent="magenta" />
+
+    <section class="preview__section">
+      <h2 class="preview__h2">Featured flag</h2>
+      <p class="preview__hint">
+        На главной показываются только <code>featured: true</code>. Здесь — оба для сравнения.
+      </p>
+      <ProjectsGrid projects={byFeatured} showHeading={false} />
+    </section>
+
+    <PixelDivider accent="purple" />
+
+    <section class="preview__section">
+      <h2 class="preview__h2">QuestLog variants</h2>
+      <p class="preview__hint">
+        Полный, без <code>learned</code>, с минимальным стеком — три формы блока.
+      </p>
+
+      <div class="preview__cols">
+        <div>
+          <h3 class="preview__h3">Full (problem + stack + outcome + learned)</h3>
+          <QuestLog {...QUEST_LOG_FULL} />
+        </div>
+        <div>
+          <h3 class="preview__h3">No learned</h3>
+          <QuestLog {...QUEST_LOG_NO_LEARNED} />
+        </div>
+        <div>
+          <h3 class="preview__h3">Minimal stack</h3>
+          <QuestLog {...QUEST_LOG_SHORT_STACK} />
+        </div>
+      </div>
+    </section>
+  </div>
+</MainLayout>
+
+<style lang="scss">
+  @use '../../styles/tokens' as *;
+
+  .preview {
+    padding: $space-6 0;
+  }
+
+  .preview__label {
+    font-family: var(--font-code);
+    font-size: $text-sm;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: $tracking-wide;
+  }
+
+  .preview__title {
+    font-family: var(--font-display);
+    font-size: $display-md;
+    color: var(--green);
+    text-transform: uppercase;
+    letter-spacing: $tracking-pixel;
+    line-height: $leading-tight;
+    margin: $space-2 0 $space-3;
+  }
+
+  .preview__intro {
+    color: var(--text);
+    line-height: $leading-normal;
+    margin: 0 0 $space-7;
+    max-width: 70ch;
+  }
+
+  .preview__section {
+    margin-bottom: $space-7;
+  }
+
+  .preview__h2 {
+    font-family: var(--font-display);
+    font-size: $text-base;
+    color: var(--cyan);
+    text-transform: uppercase;
+    letter-spacing: $tracking-pixel;
+    margin: 0 0 $space-2;
+  }
+
+  .preview__h3 {
+    font-family: var(--font-code);
+    font-size: $text-sm;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: $tracking-wide;
+    margin: 0 0 $space-3;
+  }
+
+  .preview__hint {
+    color: var(--text-muted);
+    font-family: var(--font-body);
+    font-size: $text-sm;
+    margin: 0 0 $space-4;
+
+    code {
+      font-family: var(--font-code);
+      font-size: 0.9em;
+      color: var(--cyan);
+      background: var(--surface-2);
+      padding: 1px 4px;
+      border: 1px solid var(--border);
+    }
+  }
+
+  .preview__cols {
+    display: grid;
+    gap: $space-5;
+  }
+</style>
