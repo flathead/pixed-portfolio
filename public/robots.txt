@@ -1,0 +1,6 @@
+# Site is in active migration with placeholder content.
+# Block all crawlers until real project storytelling lands.
+# Will be replaced with crawl-friendly rules after content is finalized.
+
+User-agent: *
+Disallow: /
