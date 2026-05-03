@@ -1,5 +1,9 @@
 ---
 import { PRELOAD_FONTS } from '../lib/fonts';
+import EasterEggs from '../components/islands/EasterEggs.svelte';
+import KonamiOverlay from '../components/islands/KonamiOverlay.svelte';
+import SecretMsg from '../components/islands/SecretMsg.svelte';
+import MatrixRain from '../components/islands/MatrixRain.svelte';
 
 interface Props {
   title: string;
@@ -49,9 +53,109 @@ const ogImageUrl = new URL(ogImage, Astro.site).toString();
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="alternate icon" href="/favicon.ico" />
     <meta name="generator" content={Astro.generator} />
+
+    <!-- No-FOUC theme apply: read localStorage and set CSS vars before body parses. -->
+    <script is:inline>
+      (function () {
+        try {
+          var KEY = 'pdev-theme';
+          var DEFAULT = 'matrix';
+          var THEMES = {
+            matrix: {
+              '--green': '#39ff14',
+              '--green-dim': '#0f3d1a',
+              '--cyan': '#00e5ff',
+              '--cyan-dim': '#003540',
+              '--magenta': '#ff006e',
+              '--magenta-dim': '#40001a',
+              '--yellow': '#ffd700',
+              '--yellow-dim': '#403600',
+              '--purple': '#9b59b6',
+              '--purple-dim': '#2a1540',
+            },
+            amber: {
+              '--green': '#ffb000',
+              '--green-dim': '#3d2a00',
+              '--cyan': '#ff8c00',
+              '--cyan-dim': '#402000',
+              '--magenta': '#ff006e',
+              '--magenta-dim': '#40001a',
+              '--yellow': '#ffd700',
+              '--yellow-dim': '#403600',
+              '--purple': '#ff5f00',
+              '--purple-dim': '#3d1800',
+            },
+            cyberpunk: {
+              '--green': '#ff00ff',
+              '--green-dim': '#400040',
+              '--cyan': '#00e5ff',
+              '--cyan-dim': '#003540',
+              '--magenta': '#ff0077',
+              '--magenta-dim': '#40001f',
+              '--yellow': '#fff200',
+              '--yellow-dim': '#403d00',
+              '--purple': '#b26bff',
+              '--purple-dim': '#2a1740',
+            },
+            gameboy: {
+              '--green': '#9bbc0f',
+              '--green-dim': '#1e2a0a',
+              '--cyan': '#8bac0f',
+              '--cyan-dim': '#2a3d08',
+              '--magenta': '#306230',
+              '--magenta-dim': '#0a1a0a',
+              '--yellow': '#cdd6a6',
+              '--yellow-dim': '#3d4033',
+              '--purple': '#0f380f',
+              '--purple-dim': '#05100a',
+            },
+            synthwave: {
+              '--green': '#ff2975',
+              '--green-dim': '#40001a',
+              '--cyan': '#00e5ff',
+              '--cyan-dim': '#003540',
+              '--magenta': '#ff8a3d',
+              '--magenta-dim': '#40200f',
+              '--yellow': '#fee440',
+              '--yellow-dim': '#403d0f',
+              '--purple': '#b347ff',
+              '--purple-dim': '#2a1040',
+            },
+            ocean: {
+              '--green': '#4cc9f0',
+              '--green-dim': '#0f3340',
+              '--cyan': '#7209b7',
+              '--cyan-dim': '#1a0240',
+              '--magenta': '#f72585',
+              '--magenta-dim': '#400a1f',
+              '--yellow': '#ffd166',
+              '--yellow-dim': '#403520',
+              '--purple': '#4361ee',
+              '--purple-dim': '#10173d',
+            },
+          };
+          var stored = window.localStorage.getItem(KEY);
+          var key = stored && THEMES[stored] ? stored : DEFAULT;
+          var vars = THEMES[key];
+          var root = document.documentElement;
+          for (var name in vars) {
+            if (Object.prototype.hasOwnProperty.call(vars, name)) {
+              root.style.setProperty(name, vars[name]);
+            }
+          }
+        } catch (e) {
+          /* localStorage disabled — fall through to CSS defaults from tokens.scss */
+        }
+      })();
+    </script>
   </head>
   <body>
     <slot />
+
+    <EasterEggs client:idle />
+    <KonamiOverlay client:idle />
+    <SecretMsg client:idle />
+    <MatrixRain client:idle />
   </body>
 </html>
 

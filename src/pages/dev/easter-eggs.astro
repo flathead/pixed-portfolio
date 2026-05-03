@@ -1,0 +1,216 @@
+---
+/**
+ * Dev-only showcase for the easter-egg overlays and theme palettes.
+ * Lets you trigger each interaction manually instead of needing to
+ * type the right sequence on every UI tweak.
+ */
+import MainLayout from '../../layouts/MainLayout.astro';
+import PixelButton from '../../components/ui/PixelButton.astro';
+import PixelDivider from '../../components/ui/PixelDivider.astro';
+import { THEMES, THEME_KEYS } from '../../lib/themes';
+---
+
+<MainLayout title="Easter eggs — dev" description="Manual triggers for hidden interactions">
+  <div class="container ee-dev">
+    <header class="ee-dev__head">
+      <span class="ee-dev__label">// DEV</span>
+      <h1 class="ee-dev__title">Easter eggs &amp; themes</h1>
+      <p class="ee-dev__intro">
+        Ручные триггеры для каждой пасхалки — не надо набирать комбинации руками каждый раз при
+        правке UI. Откройте DevTools console и используйте команды ниже или нажмите на кнопки.
+      </p>
+    </header>
+
+    <section class="ee-dev__section">
+      <h2 class="ee-dev__h2">Triggers (DevTools console)</h2>
+      <ul class="ee-dev__list">
+        <li><code>help()</code> — список всех команд.</li>
+        <li><code>konami()</code> — открывает GODMODE-overlay.</li>
+        <li><code>matrix()</code> — переключает matrix rain.</li>
+        <li>
+          <code>flathead()</code>, <code>hire()</code>, <code>coffee()</code>,
+          <code>source()</code> — секретные сообщения.
+        </li>
+      </ul>
+    </section>
+
+    <PixelDivider accent="green" />
+
+    <section class="ee-dev__section">
+      <h2 class="ee-dev__h2">Sequences</h2>
+      <ul class="ee-dev__list">
+        <li>Konami: <code>↑ ↑ ↓ ↓ ← → ← → B A</code></li>
+        <li>Тайпинг <code>flathead</code> в любом месте (вне input/textarea) — secret msg.</li>
+        <li>Тайпинг <code>matrix</code> — toggle matrix rain.</li>
+        <li>5 кликов по логотипу в шапке — secret msg + glitch на каждом клике.</li>
+      </ul>
+    </section>
+
+    <PixelDivider accent="cyan" />
+
+    <section class="ee-dev__section">
+      <h2 class="ee-dev__h2">Themes overview</h2>
+      <p class="ee-dev__hint">
+        Текущая тема живёт в <code>localStorage['pdev-theme']</code>. Меню — шестерёнка в шапке
+        справа.
+      </p>
+      <ul class="ee-dev__themes">
+        {
+          THEME_KEYS.map((key) => {
+            const def = THEMES[key];
+            return (
+              <li class="ee-dev__theme">
+                <div class="ee-dev__swatches" aria-hidden="true">
+                  {def.swatches.map((c) => (
+                    <span class="ee-dev__swatch" style={`background:${c};`} />
+                  ))}
+                </div>
+                <span class="ee-dev__theme-name">{def.label}</span>
+                <code class="ee-dev__theme-key">{key}</code>
+              </li>
+            );
+          })
+        }
+      </ul>
+    </section>
+
+    <PixelDivider accent="magenta" />
+
+    <section class="ee-dev__section">
+      <h2 class="ee-dev__h2">Manual button triggers</h2>
+      <p class="ee-dev__hint">На самом сайте этих кнопок не будет — это dev-only ярлыки.</p>
+      <div class="ee-dev__buttons">
+        <PixelButton variant="primary" class="js-trigger-konami">Trigger konami()</PixelButton>
+        <PixelButton variant="secondary" class="js-trigger-matrix">Trigger matrix()</PixelButton>
+        <PixelButton variant="danger" class="js-trigger-flathead">Trigger flathead()</PixelButton>
+      </div>
+    </section>
+  </div>
+</MainLayout>
+
+<script>
+  document.querySelector('.js-trigger-konami')?.addEventListener('click', () => {
+    (window as unknown as { konami?: () => void }).konami?.();
+  });
+  document.querySelector('.js-trigger-matrix')?.addEventListener('click', () => {
+    (window as unknown as { matrix?: () => void }).matrix?.();
+  });
+  document.querySelector('.js-trigger-flathead')?.addEventListener('click', () => {
+    (window as unknown as { flathead?: () => void }).flathead?.();
+  });
+</script>
+
+<style lang="scss">
+  @use '../../styles/tokens' as *;
+
+  .ee-dev {
+    padding: $space-6 0;
+  }
+
+  .ee-dev__label {
+    font-family: var(--font-code);
+    font-size: $text-sm;
+    color: var(--text-muted);
+    letter-spacing: $tracking-wide;
+    text-transform: uppercase;
+  }
+
+  .ee-dev__title {
+    font-family: var(--font-display);
+    font-size: $display-md;
+    color: var(--green);
+    text-transform: uppercase;
+    letter-spacing: $tracking-pixel;
+    margin: $space-2 0 $space-3;
+  }
+
+  .ee-dev__intro {
+    color: var(--text);
+    line-height: $leading-normal;
+    max-width: 70ch;
+    margin: 0 0 $space-7;
+  }
+
+  .ee-dev__section {
+    margin-bottom: $space-7;
+  }
+
+  .ee-dev__h2 {
+    font-family: var(--font-display);
+    font-size: $text-base;
+    color: var(--cyan);
+    text-transform: uppercase;
+    letter-spacing: $tracking-pixel;
+    margin: 0 0 $space-3;
+  }
+
+  .ee-dev__hint {
+    color: var(--text-muted);
+    font-size: $text-sm;
+    margin: 0 0 $space-4;
+  }
+
+  .ee-dev__list {
+    color: var(--text);
+    line-height: $leading-normal;
+    margin: 0 0 0 $space-5;
+    padding: 0;
+  }
+
+  code {
+    font-family: var(--font-code);
+    font-size: 0.9em;
+    color: var(--cyan);
+    background: var(--surface-2);
+    padding: 1px 6px;
+    border: 1px solid var(--border);
+  }
+
+  .ee-dev__themes {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: $space-3;
+  }
+
+  .ee-dev__theme {
+    display: flex;
+    align-items: center;
+    gap: $space-3;
+    padding: $space-3;
+    border: 2px solid var(--border);
+    background: var(--surface);
+  }
+
+  .ee-dev__swatches {
+    display: flex;
+    gap: 2px;
+  }
+
+  .ee-dev__swatch {
+    width: 14px;
+    height: 14px;
+    border: 1px solid rgba(0, 0, 0, 0.4);
+  }
+
+  .ee-dev__theme-name {
+    flex: 1;
+    font-family: var(--font-code);
+    font-size: $text-sm;
+    color: var(--text);
+    text-transform: uppercase;
+    letter-spacing: $tracking-pixel;
+  }
+
+  .ee-dev__theme-key {
+    font-size: 0.85em;
+  }
+
+  .ee-dev__buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $space-3;
+  }
+</style>

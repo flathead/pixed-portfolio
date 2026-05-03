@@ -14,25 +14,26 @@
 
 **Locked decisions:**
 
-| Тема | Решение |
-|---|---|
-| Framework для островов | Svelte 5 (`@astrojs/svelte` уже подключён в M1) |
-| State management | Один `src/lib/state.svelte.ts` с `$state` runes — без классических stores и без zustand-подобных библиотек |
-| Theme persist | `localStorage` ключ `pdev-theme`, дефолт `matrix` |
-| FOUC prevention | Inline-script в `<head>` BaseLayout читает `localStorage` и применяет CSS-vars до парсинга body |
-| Hydration стратегии | EasterEggs — `client:idle` (глобальный listener), MatrixRain — `client:idle` (canvas скрыт по умолчанию), ThemeTweaker — `client:visible` (он в sticky-header), LogoGlitch — `client:visible` (он в header) |
-| Cursor trail | Не имплементируем (cut по spec секция 4) |
-| Анимации Motion One / scroll-driven / View Transitions | Отдельный milestone «Animation Pass» (вне scope M3) |
-| Glitch на логотипе | CSS-only `@keyframes glitch1/glitch2` + clip-path — без библиотек |
-| Console commands | `window.help/matrix/konami/flathead/hire/coffee/source` — TypeScript module attached on EasterEggs mount |
-| Konami sequence | `↑↑↓↓←→←→BA` (как в прототипе, классика) |
-| Type-watcher слова | `flathead` → secret msg, `matrix` → toggle matrix rain |
-| Logo click trigger | 5 кликов → secret msg + glitch на каждом клике |
-| Lang switcher | Остаётся скрытым из M2 (i18n активируется не в M3) |
-| Theme apply подход | `document.documentElement.style.setProperty('--green', ...)` для каждой темы |
-| Темы (6 палитр) | matrix (default) / amber / cyberpunk / gameboy / synthwave / ocean — точно как в прототипе |
+| Тема                                                   | Решение                                                                                                                                                                                                     |
+| ------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Framework для островов                                 | Svelte 5 (`@astrojs/svelte` уже подключён в M1)                                                                                                                                                             |
+| State management                                       | Один `src/lib/state.svelte.ts` с `$state` runes — без классических stores и без zustand-подобных библиотек                                                                                                  |
+| Theme persist                                          | `localStorage` ключ `pdev-theme`, дефолт `matrix`                                                                                                                                                           |
+| FOUC prevention                                        | Inline-script в `<head>` BaseLayout читает `localStorage` и применяет CSS-vars до парсинга body                                                                                                             |
+| Hydration стратегии                                    | EasterEggs — `client:idle` (глобальный listener), MatrixRain — `client:idle` (canvas скрыт по умолчанию), ThemeTweaker — `client:visible` (он в sticky-header), LogoGlitch — `client:visible` (он в header) |
+| Cursor trail                                           | Не имплементируем (cut по spec секция 4)                                                                                                                                                                    |
+| Анимации Motion One / scroll-driven / View Transitions | Отдельный milestone «Animation Pass» (вне scope M3)                                                                                                                                                         |
+| Glitch на логотипе                                     | CSS-only `@keyframes glitch1/glitch2` + clip-path — без библиотек                                                                                                                                           |
+| Console commands                                       | `window.help/matrix/konami/flathead/hire/coffee/source` — TypeScript module attached on EasterEggs mount                                                                                                    |
+| Konami sequence                                        | `↑↑↓↓←→←→BA` (как в прототипе, классика)                                                                                                                                                                    |
+| Type-watcher слова                                     | `flathead` → secret msg, `matrix` → toggle matrix rain                                                                                                                                                      |
+| Logo click trigger                                     | 5 кликов → secret msg + glitch на каждом клике                                                                                                                                                              |
+| Lang switcher                                          | Остаётся скрытым из M2 (i18n активируется не в M3)                                                                                                                                                          |
+| Theme apply подход                                     | `document.documentElement.style.setProperty('--green', ...)` для каждой темы                                                                                                                                |
+| Темы (6 палитр)                                        | matrix (default) / amber / cyberpunk / gameboy / synthwave / ocean — точно как в прототипе                                                                                                                  |
 
 **Out of scope (Animation Pass / M4 / M5):**
+
 - Motion One scroll-reveal, stagger, parallax.
 - Astro View Transitions.
 - Typewriter в Hero, animated HP-bars on viewport.
@@ -76,6 +77,7 @@ src/
 ```
 
 **Новые файлы и их единственная ответственность:**
+
 - `state.svelte.ts` — реактивное хранилище, к которому подписаны все острова. Никакой бизнес-логики.
 - `themes.ts` — данные тем + чистая функция `applyTheme(key, root)`. Не трогает DOM напрямую (передаём `root`).
 - `easter-eggs.ts` — runtime-логика: parse keyboard sequences, регистрация console-команд. Не рендерит UI.
@@ -93,6 +95,7 @@ src/
 ### Task 5.1: Themes data + applyTheme helper
 
 **Files:**
+
 - Create: `src/lib/themes.ts`
 
 - [ ] **Step 1: Создать `src/lib/themes.ts`**
@@ -109,7 +112,14 @@ src/
  * the browser. The pre-hydration inline script in BaseLayout uses the same
  * data to set vars before any island mounts.
  */
-export const THEME_KEYS = ['matrix', 'amber', 'cyberpunk', 'gameboy', 'synthwave', 'ocean'] as const;
+export const THEME_KEYS = [
+  'matrix',
+  'amber',
+  'cyberpunk',
+  'gameboy',
+  'synthwave',
+  'ocean',
+] as const;
 export type ThemeKey = (typeof THEME_KEYS)[number];
 export const DEFAULT_THEME: ThemeKey = 'matrix';
 
@@ -124,66 +134,96 @@ export const THEMES: Readonly<Record<ThemeKey, ThemeDef>> = {
     label: 'Matrix',
     swatches: ['#39ff14', '#00e5ff', '#ff006e'],
     vars: {
-      '--green': '#39ff14', '--green-dim': '#0f3d1a',
-      '--cyan': '#00e5ff', '--cyan-dim': '#003540',
-      '--magenta': '#ff006e', '--magenta-dim': '#40001a',
-      '--yellow': '#ffd700', '--yellow-dim': '#403600',
-      '--purple': '#9b59b6', '--purple-dim': '#2a1540',
+      '--green': '#39ff14',
+      '--green-dim': '#0f3d1a',
+      '--cyan': '#00e5ff',
+      '--cyan-dim': '#003540',
+      '--magenta': '#ff006e',
+      '--magenta-dim': '#40001a',
+      '--yellow': '#ffd700',
+      '--yellow-dim': '#403600',
+      '--purple': '#9b59b6',
+      '--purple-dim': '#2a1540',
     },
   },
   amber: {
     label: 'Amber CRT',
     swatches: ['#ffb000', '#ff8c00', '#ff006e'],
     vars: {
-      '--green': '#ffb000', '--green-dim': '#3d2a00',
-      '--cyan': '#ff8c00', '--cyan-dim': '#402000',
-      '--magenta': '#ff006e', '--magenta-dim': '#40001a',
-      '--yellow': '#ffd700', '--yellow-dim': '#403600',
-      '--purple': '#ff5f00', '--purple-dim': '#3d1800',
+      '--green': '#ffb000',
+      '--green-dim': '#3d2a00',
+      '--cyan': '#ff8c00',
+      '--cyan-dim': '#402000',
+      '--magenta': '#ff006e',
+      '--magenta-dim': '#40001a',
+      '--yellow': '#ffd700',
+      '--yellow-dim': '#403600',
+      '--purple': '#ff5f00',
+      '--purple-dim': '#3d1800',
     },
   },
   cyberpunk: {
     label: 'Cyberpunk',
     swatches: ['#ff00ff', '#00e5ff', '#fff200'],
     vars: {
-      '--green': '#ff00ff', '--green-dim': '#400040',
-      '--cyan': '#00e5ff', '--cyan-dim': '#003540',
-      '--magenta': '#ff0077', '--magenta-dim': '#40001f',
-      '--yellow': '#fff200', '--yellow-dim': '#403d00',
-      '--purple': '#b26bff', '--purple-dim': '#2a1740',
+      '--green': '#ff00ff',
+      '--green-dim': '#400040',
+      '--cyan': '#00e5ff',
+      '--cyan-dim': '#003540',
+      '--magenta': '#ff0077',
+      '--magenta-dim': '#40001f',
+      '--yellow': '#fff200',
+      '--yellow-dim': '#403d00',
+      '--purple': '#b26bff',
+      '--purple-dim': '#2a1740',
     },
   },
   gameboy: {
     label: 'Game Boy',
     swatches: ['#9bbc0f', '#8bac0f', '#306230'],
     vars: {
-      '--green': '#9bbc0f', '--green-dim': '#1e2a0a',
-      '--cyan': '#8bac0f', '--cyan-dim': '#2a3d08',
-      '--magenta': '#306230', '--magenta-dim': '#0a1a0a',
-      '--yellow': '#cdd6a6', '--yellow-dim': '#3d4033',
-      '--purple': '#0f380f', '--purple-dim': '#05100a',
+      '--green': '#9bbc0f',
+      '--green-dim': '#1e2a0a',
+      '--cyan': '#8bac0f',
+      '--cyan-dim': '#2a3d08',
+      '--magenta': '#306230',
+      '--magenta-dim': '#0a1a0a',
+      '--yellow': '#cdd6a6',
+      '--yellow-dim': '#3d4033',
+      '--purple': '#0f380f',
+      '--purple-dim': '#05100a',
     },
   },
   synthwave: {
     label: 'Synthwave',
     swatches: ['#ff2975', '#ff8a3d', '#00e5ff'],
     vars: {
-      '--green': '#ff2975', '--green-dim': '#40001a',
-      '--cyan': '#00e5ff', '--cyan-dim': '#003540',
-      '--magenta': '#ff8a3d', '--magenta-dim': '#40200f',
-      '--yellow': '#fee440', '--yellow-dim': '#403d0f',
-      '--purple': '#b347ff', '--purple-dim': '#2a1040',
+      '--green': '#ff2975',
+      '--green-dim': '#40001a',
+      '--cyan': '#00e5ff',
+      '--cyan-dim': '#003540',
+      '--magenta': '#ff8a3d',
+      '--magenta-dim': '#40200f',
+      '--yellow': '#fee440',
+      '--yellow-dim': '#403d0f',
+      '--purple': '#b347ff',
+      '--purple-dim': '#2a1040',
     },
   },
   ocean: {
     label: 'Deep Sea',
     swatches: ['#4cc9f0', '#7209b7', '#f72585'],
     vars: {
-      '--green': '#4cc9f0', '--green-dim': '#0f3340',
-      '--cyan': '#7209b7', '--cyan-dim': '#1a0240',
-      '--magenta': '#f72585', '--magenta-dim': '#400a1f',
-      '--yellow': '#ffd166', '--yellow-dim': '#403520',
-      '--purple': '#4361ee', '--purple-dim': '#10173d',
+      '--green': '#4cc9f0',
+      '--green-dim': '#0f3340',
+      '--cyan': '#7209b7',
+      '--cyan-dim': '#1a0240',
+      '--magenta': '#f72585',
+      '--magenta-dim': '#400a1f',
+      '--yellow': '#ffd166',
+      '--yellow-dim': '#403520',
+      '--purple': '#4361ee',
+      '--purple-dim': '#10173d',
     },
   },
 };
@@ -239,6 +279,7 @@ git commit -m "feat(themes): add 6 palette definitions + apply/read/write helper
 ### Task 5.2: Reactive state runes module
 
 **Files:**
+
 - Create: `src/lib/state.svelte.ts`
 
 - [ ] **Step 1: Создать `src/lib/state.svelte.ts`**
@@ -290,6 +331,7 @@ git commit -m "feat(state): add cross-island reactive state via Svelte 5 runes"
 ### Task 5.3: ThemeTweaker island
 
 **Files:**
+
 - Create: `src/components/islands/ThemeTweaker.svelte`
 
 - [ ] **Step 1: Создать директорию островов**
@@ -399,7 +441,9 @@ mkdir -p src/components/islands
     font-size: $text-base;
     cursor: pointer;
     padding: $space-1;
-    transition: color 80ms steps(2), transform 200ms steps(8);
+    transition:
+      color 80ms steps(2),
+      transform 200ms steps(8);
 
     &:hover,
     &--active {
@@ -447,7 +491,9 @@ mkdir -p src/components/islands
     font-size: $text-sm;
     text-align: left;
     cursor: pointer;
-    transition: border-color 80ms steps(2), background 80ms steps(2);
+    transition:
+      border-color 80ms steps(2),
+      background 80ms steps(2);
 
     &:hover {
       border-color: var(--cyan);
@@ -497,6 +543,7 @@ git commit -m "feat(islands): add ThemeTweaker — gear menu with 6 palette swat
 ### Task 5.4: Pre-hydration theme apply script
 
 **Files:**
+
 - Modify: `src/layouts/BaseLayout.astro`
 
 - [ ] **Step 1: Прочитать текущий `BaseLayout.astro`**
@@ -510,70 +557,100 @@ cat src/layouts/BaseLayout.astro
 В `BaseLayout.astro` найти строку `<meta name="generator" content={Astro.generator} />` и добавить **сразу после неё** блок:
 
 ```astro
-    <!-- No-FOUC theme apply: read localStorage and set CSS vars before body parses. -->
-    <script is:inline>
-      (function () {
-        try {
-          var KEY = 'pdev-theme';
-          var DEFAULT = 'matrix';
-          var THEMES = {
-            matrix: {
-              '--green': '#39ff14', '--green-dim': '#0f3d1a',
-              '--cyan': '#00e5ff', '--cyan-dim': '#003540',
-              '--magenta': '#ff006e', '--magenta-dim': '#40001a',
-              '--yellow': '#ffd700', '--yellow-dim': '#403600',
-              '--purple': '#9b59b6', '--purple-dim': '#2a1540',
-            },
-            amber: {
-              '--green': '#ffb000', '--green-dim': '#3d2a00',
-              '--cyan': '#ff8c00', '--cyan-dim': '#402000',
-              '--magenta': '#ff006e', '--magenta-dim': '#40001a',
-              '--yellow': '#ffd700', '--yellow-dim': '#403600',
-              '--purple': '#ff5f00', '--purple-dim': '#3d1800',
-            },
-            cyberpunk: {
-              '--green': '#ff00ff', '--green-dim': '#400040',
-              '--cyan': '#00e5ff', '--cyan-dim': '#003540',
-              '--magenta': '#ff0077', '--magenta-dim': '#40001f',
-              '--yellow': '#fff200', '--yellow-dim': '#403d00',
-              '--purple': '#b26bff', '--purple-dim': '#2a1740',
-            },
-            gameboy: {
-              '--green': '#9bbc0f', '--green-dim': '#1e2a0a',
-              '--cyan': '#8bac0f', '--cyan-dim': '#2a3d08',
-              '--magenta': '#306230', '--magenta-dim': '#0a1a0a',
-              '--yellow': '#cdd6a6', '--yellow-dim': '#3d4033',
-              '--purple': '#0f380f', '--purple-dim': '#05100a',
-            },
-            synthwave: {
-              '--green': '#ff2975', '--green-dim': '#40001a',
-              '--cyan': '#00e5ff', '--cyan-dim': '#003540',
-              '--magenta': '#ff8a3d', '--magenta-dim': '#40200f',
-              '--yellow': '#fee440', '--yellow-dim': '#403d0f',
-              '--purple': '#b347ff', '--purple-dim': '#2a1040',
-            },
-            ocean: {
-              '--green': '#4cc9f0', '--green-dim': '#0f3340',
-              '--cyan': '#7209b7', '--cyan-dim': '#1a0240',
-              '--magenta': '#f72585', '--magenta-dim': '#400a1f',
-              '--yellow': '#ffd166', '--yellow-dim': '#403520',
-              '--purple': '#4361ee', '--purple-dim': '#10173d',
-            },
-          };
-          var stored = window.localStorage.getItem(KEY);
-          var key = (stored && THEMES[stored]) ? stored : DEFAULT;
-          var vars = THEMES[key];
-          var root = document.documentElement;
-          for (var name in vars) {
-            if (Object.prototype.hasOwnProperty.call(vars, name)) {
-              root.style.setProperty(name, vars[name]);
-            }
-          }
-        } catch (e) {
-          /* localStorage disabled — fall through to CSS defaults from tokens.scss */
+<!-- No-FOUC theme apply: read localStorage and set CSS vars before body parses. -->
+<script is:inline>
+  (function () {
+    try {
+      var KEY = 'pdev-theme';
+      var DEFAULT = 'matrix';
+      var THEMES = {
+        matrix: {
+          '--green': '#39ff14',
+          '--green-dim': '#0f3d1a',
+          '--cyan': '#00e5ff',
+          '--cyan-dim': '#003540',
+          '--magenta': '#ff006e',
+          '--magenta-dim': '#40001a',
+          '--yellow': '#ffd700',
+          '--yellow-dim': '#403600',
+          '--purple': '#9b59b6',
+          '--purple-dim': '#2a1540',
+        },
+        amber: {
+          '--green': '#ffb000',
+          '--green-dim': '#3d2a00',
+          '--cyan': '#ff8c00',
+          '--cyan-dim': '#402000',
+          '--magenta': '#ff006e',
+          '--magenta-dim': '#40001a',
+          '--yellow': '#ffd700',
+          '--yellow-dim': '#403600',
+          '--purple': '#ff5f00',
+          '--purple-dim': '#3d1800',
+        },
+        cyberpunk: {
+          '--green': '#ff00ff',
+          '--green-dim': '#400040',
+          '--cyan': '#00e5ff',
+          '--cyan-dim': '#003540',
+          '--magenta': '#ff0077',
+          '--magenta-dim': '#40001f',
+          '--yellow': '#fff200',
+          '--yellow-dim': '#403d00',
+          '--purple': '#b26bff',
+          '--purple-dim': '#2a1740',
+        },
+        gameboy: {
+          '--green': '#9bbc0f',
+          '--green-dim': '#1e2a0a',
+          '--cyan': '#8bac0f',
+          '--cyan-dim': '#2a3d08',
+          '--magenta': '#306230',
+          '--magenta-dim': '#0a1a0a',
+          '--yellow': '#cdd6a6',
+          '--yellow-dim': '#3d4033',
+          '--purple': '#0f380f',
+          '--purple-dim': '#05100a',
+        },
+        synthwave: {
+          '--green': '#ff2975',
+          '--green-dim': '#40001a',
+          '--cyan': '#00e5ff',
+          '--cyan-dim': '#003540',
+          '--magenta': '#ff8a3d',
+          '--magenta-dim': '#40200f',
+          '--yellow': '#fee440',
+          '--yellow-dim': '#403d0f',
+          '--purple': '#b347ff',
+          '--purple-dim': '#2a1040',
+        },
+        ocean: {
+          '--green': '#4cc9f0',
+          '--green-dim': '#0f3340',
+          '--cyan': '#7209b7',
+          '--cyan-dim': '#1a0240',
+          '--magenta': '#f72585',
+          '--magenta-dim': '#400a1f',
+          '--yellow': '#ffd166',
+          '--yellow-dim': '#403520',
+          '--purple': '#4361ee',
+          '--purple-dim': '#10173d',
+        },
+      };
+      var stored = window.localStorage.getItem(KEY);
+      var key = stored && THEMES[stored] ? stored : DEFAULT;
+      var vars = THEMES[key];
+      var root = document.documentElement;
+      for (var name in vars) {
+        if (Object.prototype.hasOwnProperty.call(vars, name)) {
+          root.style.setProperty(name, vars[name]);
         }
-      })();
-    </script>
+      }
+    } catch (e) {
+      /* localStorage disabled — fall through to CSS defaults from tokens.scss */
+    }
+  })();
+</script>
 ```
 
 > Важно: палитры здесь дублируют `src/lib/themes.ts`. Это сознательно — inline-script должен быть самодостаточным, импорты из ESM-модулей блокировали бы его. При смене палитр держим оба файла в синхроне (см. EASTER-EGGS.md для процесса).
@@ -589,9 +666,12 @@ ASTRO_IMAGES=passthrough pnpm dev
 ```
 
 Открыть `http://localhost:4321/`. В DevTools Console:
+
 ```js
-localStorage.setItem('pdev-theme', 'amber'); location.reload();
+localStorage.setItem('pdev-theme', 'amber');
+location.reload();
 ```
+
 Страница должна сразу появиться в янтарной палитре, без зелёной вспышки.
 
 - [ ] **Step 5: Коммит**
@@ -606,6 +686,7 @@ git commit -m "feat(themes): no-FOUC pre-hydration theme apply via inline script
 ### Task 5.5: Wire ThemeTweaker into Header
 
 **Files:**
+
 - Modify: `src/components/nav/Header.astro`
 - Delete: `src/components/nav/ThemeTweakerBtn.astro`
 
@@ -661,6 +742,7 @@ git commit -m "feat(nav): replace theme placeholder with live ThemeTweaker islan
 ### Task 6.1: Easter eggs runtime module
 
 **Files:**
+
 - Create: `src/lib/easter-eggs.ts`
 
 - [ ] **Step 1: Создать `src/lib/easter-eggs.ts`**
@@ -838,6 +920,7 @@ git commit -m "feat(easter-eggs): sequence matchers + console commands with test
 ### Task 6.2: KonamiOverlay island
 
 **Files:**
+
 - Create: `src/components/islands/KonamiOverlay.svelte`
 - Modify: `src/styles/animations.scss` — add `levelup` keyframe
 
@@ -978,6 +1061,7 @@ git commit -m "feat(easter-eggs): KonamiOverlay island + levelup keyframe"
 ### Task 6.3: SecretMsg island
 
 **Files:**
+
 - Create: `src/components/islands/SecretMsg.svelte`
 
 - [ ] **Step 1: Создать `src/components/islands/SecretMsg.svelte`**
@@ -998,12 +1082,7 @@ git commit -m "feat(easter-eggs): KonamiOverlay island + levelup keyframe"
 <svelte:window onkeydown={handleKey} />
 
 {#if easterEggs.secretMsg}
-  <button
-    class="msg"
-    type="button"
-    onclick={close}
-    aria-label="Dismiss secret message"
-  >
+  <button class="msg" type="button" onclick={close} aria-label="Dismiss secret message">
     <div class="msg__head">// secret.txt</div>
     <div class="msg__body">{easterEggs.secretMsg}</div>
     <div class="msg__hint">[click · Esc]</div>
@@ -1069,6 +1148,7 @@ git commit -m "feat(easter-eggs): SecretMsg toast island"
 ### Task 6.4: MatrixRain island
 
 **Files:**
+
 - Create: `src/components/islands/MatrixRain.svelte`
 
 - [ ] **Step 1: Создать `src/components/islands/MatrixRain.svelte`**
@@ -1083,8 +1163,7 @@ git commit -m "feat(easter-eggs): SecretMsg toast island"
   let drops: number[] = [];
   let cols = 0;
 
-  const CHARS =
-    'アイウエオカキクケコサシスセソタチツテトナニヌネノABCDEF0123456789{}[]<>/\\|';
+  const CHARS = 'アイウエオカキクケコサシスセソタチツテトナニヌネノABCDEF0123456789{}[]<>/\\|';
   const CELL = 14;
 
   function resize(canvas: HTMLCanvasElement): void {
@@ -1098,8 +1177,7 @@ git commit -m "feat(easter-eggs): SecretMsg toast island"
     ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle =
-      getComputedStyle(document.documentElement).getPropertyValue('--green').trim() ||
-      '#39ff14';
+      getComputedStyle(document.documentElement).getPropertyValue('--green').trim() || '#39ff14';
     ctx.font = '13px "IBM Plex Mono", monospace';
     for (let i = 0; i < drops.length; i++) {
       const ch = CHARS[Math.floor(Math.random() * CHARS.length)];
@@ -1178,6 +1256,7 @@ git commit -m "feat(easter-eggs): MatrixRain canvas island"
 ### Task 6.5: LogoGlitch island + glitch keyframes
 
 **Files:**
+
 - Create: `src/components/islands/LogoGlitch.svelte`
 - Modify: `src/styles/animations.scss` — add `glitch1`, `glitch2`
 
@@ -1187,7 +1266,8 @@ git commit -m "feat(easter-eggs): MatrixRain canvas island"
 
 ```scss
 @keyframes glitch1 {
-  0%, 100% {
+  0%,
+  100% {
     clip-path: inset(40% 0 61% 0);
   }
   20% {
@@ -1205,7 +1285,8 @@ git commit -m "feat(easter-eggs): MatrixRain canvas island"
 }
 
 @keyframes glitch2 {
-  0%, 100% {
+  0%,
+  100% {
     clip-path: inset(15% 0 70% 0);
   }
   25% {
@@ -1254,13 +1335,7 @@ git commit -m "feat(easter-eggs): MatrixRain canvas island"
   }
 </script>
 
-<a
-  {href}
-  class="brand"
-  class:brand--glitching={glitching}
-  data-text={text}
-  onclick={handleClick}
->
+<a {href} class="brand" class:brand--glitching={glitching} data-text={text} onclick={handleClick}>
   <span class="brand__bracket">[</span>
   <span class="brand__name">{text}</span>
   <span class="brand__bracket">]</span>
@@ -1346,6 +1421,7 @@ git commit -m "feat(easter-eggs): LogoGlitch island with click counter + glitch 
 ### Task 6.6: EasterEggs orchestrator island
 
 **Files:**
+
 - Create: `src/components/islands/EasterEggs.svelte`
 
 - [ ] **Step 1: Создать `src/components/islands/EasterEggs.svelte`**
@@ -1354,12 +1430,7 @@ git commit -m "feat(easter-eggs): LogoGlitch island with click counter + glitch 
 <script lang="ts">
   import { onMount } from 'svelte';
   import { easterEggs } from '../../lib/state.svelte';
-  import {
-    SECRETS,
-    matchKonami,
-    matchTyped,
-    registerConsoleCommands,
-  } from '../../lib/easter-eggs';
+  import { SECRETS, matchKonami, matchTyped, registerConsoleCommands } from '../../lib/easter-eggs';
 
   const TYPED_BUFFER_LIMIT = 12;
   const KEY_BUFFER_LIMIT = 12;
@@ -1426,6 +1497,7 @@ git commit -m "feat(easter-eggs): EasterEggs orchestrator wires keyboard to stat
 ### Task 7.1: Wire islands into BaseLayout
 
 **Files:**
+
 - Modify: `src/layouts/BaseLayout.astro`
 
 - [ ] **Step 1: Прочитать файл**
@@ -1439,10 +1511,10 @@ cat src/layouts/BaseLayout.astro
 В начало `---` блока (рядом с другими импортами):
 
 ```astro
-import EasterEggs from '../components/islands/EasterEggs.svelte';
-import KonamiOverlay from '../components/islands/KonamiOverlay.svelte';
-import SecretMsg from '../components/islands/SecretMsg.svelte';
-import MatrixRain from '../components/islands/MatrixRain.svelte';
+import EasterEggs from '../components/islands/EasterEggs.svelte'; import KonamiOverlay from
+'../components/islands/KonamiOverlay.svelte'; import SecretMsg from
+'../components/islands/SecretMsg.svelte'; import MatrixRain from
+'../components/islands/MatrixRain.svelte';
 ```
 
 - [ ] **Step 3: Перед закрытием `</body>` подключить острова**
@@ -1450,10 +1522,10 @@ import MatrixRain from '../components/islands/MatrixRain.svelte';
 Сразу после `<slot />` и перед `</body>` добавить:
 
 ```astro
-    <EasterEggs client:idle />
-    <KonamiOverlay client:idle />
-    <SecretMsg client:idle />
-    <MatrixRain client:idle />
+<EasterEggs client:idle />
+<KonamiOverlay client:idle />
+<SecretMsg client:idle />
+<MatrixRain client:idle />
 ```
 
 - [ ] **Step 4: `pnpm check && rm -rf dist .astro && ASTRO_IMAGES=passthrough pnpm build`**
@@ -1467,6 +1539,7 @@ ASTRO_IMAGES=passthrough pnpm dev
 ```
 
 Открыть `/`, протестировать:
+
 - Konami последовательность `↑↑↓↓←→←→BA` → появляется overlay.
 - Набрать `flathead` → secret msg.
 - Набрать `matrix` → matrix rain включается, ещё раз → выключается.
@@ -1484,6 +1557,7 @@ git commit -m "feat(layout): mount EasterEggs orchestrator + overlay islands"
 ### Task 7.2: Replace Header brand with LogoGlitch
 
 **Files:**
+
 - Modify: `src/components/nav/Header.astro`
 
 - [ ] **Step 1: В frontmatter добавить импорт**
@@ -1534,6 +1608,7 @@ git commit -m "feat(nav): replace static brand with interactive LogoGlitch islan
 ### Task 7.3: Dev showcase — easter eggs
 
 **Files:**
+
 - Create: `src/pages/dev/easter-eggs.astro`
 
 - [ ] **Step 1: Создать `src/pages/dev/easter-eggs.astro`**
@@ -1557,9 +1632,8 @@ import { THEMES, THEME_KEYS } from '../../lib/themes';
       <span class="ee-dev__label">// DEV</span>
       <h1 class="ee-dev__title">Easter eggs &amp; themes</h1>
       <p class="ee-dev__intro">
-        Ручные триггеры для каждой пасхалки — не надо набирать комбинации руками
-        каждый раз при правке UI. Откройте DevTools console и используйте команды
-        ниже или нажмите на кнопки.
+        Ручные триггеры для каждой пасхалки — не надо набирать комбинации руками каждый раз при
+        правке UI. Откройте DevTools console и используйте команды ниже или нажмите на кнопки.
       </p>
     </header>
 
@@ -1569,7 +1643,10 @@ import { THEMES, THEME_KEYS } from '../../lib/themes';
         <li><code>help()</code> — список всех команд.</li>
         <li><code>konami()</code> — открывает GODMODE-overlay.</li>
         <li><code>matrix()</code> — переключает matrix rain.</li>
-        <li><code>flathead()</code>, <code>hire()</code>, <code>coffee()</code>, <code>source()</code> — секретные сообщения.</li>
+        <li>
+          <code>flathead()</code>, <code>hire()</code>, <code>coffee()</code>, <code>source()</code> —
+          секретные сообщения.
+        </li>
       </ul>
     </section>
 
@@ -1590,8 +1667,8 @@ import { THEMES, THEME_KEYS } from '../../lib/themes';
     <section class="ee-dev__section">
       <h2 class="ee-dev__h2">Themes overview</h2>
       <p class="ee-dev__hint">
-        Текущая тема живёт в <code>localStorage['pdev-theme']</code>. Меню — шестерёнка
-        в шапке справа.
+        Текущая тема живёт в <code>localStorage['pdev-theme']</code>. Меню — шестерёнка в шапке
+        справа.
       </p>
       <ul class="ee-dev__themes">
         {
@@ -1617,9 +1694,7 @@ import { THEMES, THEME_KEYS } from '../../lib/themes';
 
     <section class="ee-dev__section">
       <h2 class="ee-dev__h2">Manual button triggers</h2>
-      <p class="ee-dev__hint">
-        На самом сайте этих кнопок не будет — это dev-only ярлыки.
-      </p>
+      <p class="ee-dev__hint">На самом сайте этих кнопок не будет — это dev-only ярлыки.</p>
       <div class="ee-dev__buttons">
         <PixelButton variant="primary" class="js-trigger-konami">Trigger konami()</PixelButton>
         <PixelButton variant="secondary" class="js-trigger-matrix">Trigger matrix()</PixelButton>
@@ -1777,6 +1852,7 @@ git commit -m "feat(dev): /dev/easter-eggs showcase with manual triggers and the
 ### Task 7.4: Documentation
 
 **Files:**
+
 - Create: `docs/EASTER-EGGS.md`
 - Modify: `docs/CONTENT.md` — добавить ссылку на EASTER-EGGS.md
 
@@ -1796,14 +1872,14 @@ git commit -m "feat(dev): /dev/easter-eggs showcase with manual triggers and the
 шапки. Выбор сохраняется в `localStorage['pdev-theme']` и применяется
 до hydration через inline-script (без FOUC).
 
-| Ключ | Название | Палитра |
-|---|---|---|
-| `matrix` | Matrix | classic CRT-зелёный + cyan + magenta (по умолчанию) |
-| `amber` | Amber CRT | янтарный с тёплыми оранжевыми акцентами |
-| `cyberpunk` | Cyberpunk | magenta / cyan / yellow |
-| `gameboy` | Game Boy | 4-уровневый зелёный |
-| `synthwave` | Synthwave | hot pink / orange / cyan |
-| `ocean` | Deep Sea | cyan / purple / pink |
+| Ключ        | Название  | Палитра                                             |
+| ----------- | --------- | --------------------------------------------------- |
+| `matrix`    | Matrix    | classic CRT-зелёный + cyan + magenta (по умолчанию) |
+| `amber`     | Amber CRT | янтарный с тёплыми оранжевыми акцентами             |
+| `cyberpunk` | Cyberpunk | magenta / cyan / yellow                             |
+| `gameboy`   | Game Boy  | 4-уровневый зелёный                                 |
+| `synthwave` | Synthwave | hot pink / orange / cyan                            |
+| `ocean`     | Deep Sea  | cyan / purple / pink                                |
 
 ### Добавить новую палитру
 
@@ -1850,15 +1926,15 @@ glitch и увеличивает счётчик. На 5-м клике — secret
 
 Открыть DevTools → Console:
 
-| Команда | Эффект |
-|---|---|
-| `help()` | список всех команд |
-| `konami()` | открыть GODMODE overlay |
-| `matrix()` | toggle matrix rain |
+| Команда      | Эффект                                 |
+| ------------ | -------------------------------------- |
+| `help()`     | список всех команд                     |
+| `konami()`   | открыть GODMODE overlay                |
+| `matrix()`   | toggle matrix rain                     |
 | `flathead()` | secret msg «Потому. Просто потому. 🤷» |
-| `hire()` | secret msg c CTA на /contact/ |
-| `coffee()` | secret msg «☕ +1 cup» |
-| `source()` | secret msg со ссылкой на github |
+| `hire()`     | secret msg c CTA на /contact/          |
+| `coffee()`   | secret msg «☕ +1 cup»                 |
+| `source()`   | secret msg со ссылкой на github        |
 
 Регистрация — в `src/lib/easter-eggs.ts` →
 `registerConsoleCommands()`.
@@ -1868,9 +1944,10 @@ glitch и увеличивает счётчик. На 5-м клике — secret
 ## Тестирование
 
 Все триггеры также доступны вручную на dev-странице:
-
 ```
+
 http://localhost:4321/dev/easter-eggs/
+
 ```
 
 Там есть кнопки `Trigger konami()`, `Trigger matrix()`,
@@ -1885,11 +1962,13 @@ http://localhost:4321/dev/easter-eggs/
 Все острова используют один реактивный стейт через Svelte 5 runes:
 
 ```
+
 src/lib/state.svelte.ts
-   ├── easterEggs.konamiOpen     ← KonamiOverlay показывает себя
-   ├── easterEggs.matrixActive   ← MatrixRain включает canvas
-   ├── easterEggs.secretMsg      ← SecretMsg показывает toast
-   └── themeState.theme          ← ThemeTweaker подсвечивает текущую
+├── easterEggs.konamiOpen ← KonamiOverlay показывает себя
+├── easterEggs.matrixActive ← MatrixRain включает canvas
+├── easterEggs.secretMsg ← SecretMsg показывает toast
+└── themeState.theme ← ThemeTweaker подсвечивает текущую
+
 ```
 
 Острова:
@@ -1946,6 +2025,7 @@ pnpm check && pnpm test && pnpm format:check && rm -rf dist .astro && ASTRO_IMAG
 ```
 
 Expected:
+
 - `pnpm check`: 0 errors / 0 warnings / 0 hints
 - `pnpm test`: ≥20 passed (16 i18n + ≥8 easter-eggs)
 - `pnpm format:check`: clean
@@ -1992,12 +2072,14 @@ Expected: все 9 URL возвращают `HTTP/2 200`.
 ## Verification Checklist (end of M3)
 
 **Build & types:**
+
 - [ ] `pnpm check` 0/0/0
 - [ ] `pnpm test` все зелёные
 - [ ] `pnpm build` создаёт 10 HTML-страниц + JS-чанки для каждого острова в `dist/_astro/`
 - [ ] `pnpm format:check` clean
 
 **Темы:**
+
 - [ ] 6 палитр определены в `src/lib/themes.ts` и в inline-script BaseLayout
 - [ ] Шестерёнка в шапке открывает меню с 6 swatches + label
 - [ ] Активная палитра подсвечена `--green` бордюром и checkmark
@@ -2006,6 +2088,7 @@ Expected: все 9 URL возвращают `HTTP/2 200`.
 - [ ] Esc и клик вне меню закрывают dropdown
 
 **Пасхалки:**
+
 - [ ] Konami code открывает overlay
 - [ ] Тайпинг `flathead` показывает secret msg
 - [ ] Тайпинг `matrix` toggle-ит matrix rain
@@ -2016,6 +2099,7 @@ Expected: все 9 URL возвращают `HTTP/2 200`.
 - [ ] Esc закрывает overlay и SecretMsg
 
 **Production:**
+
 - [ ] CI зелёный
 - [ ] `https://pixed-portfolio.pages.dev/` отдаёт сайт с шестерёнкой и работающими пасхалками
 - [ ] `/dev/easter-eggs/` доступна и показывает 6 палитр + 3 кнопки-триггера
@@ -2027,6 +2111,7 @@ Expected: все 9 URL возвращают `HTTP/2 200`.
 ## What's in / out of M3
 
 **In:**
+
 - 6 палитр + ThemeTweaker UI с persist
 - 4 пасхалки на keyboard (Konami, flathead, matrix, logo×5) + 7 console-команд
 - 3 overlay-острова (KonamiOverlay, SecretMsg, MatrixRain) + 2 wrapper-острова (LogoGlitch, ThemeTweaker, EasterEggs orchestrator)
@@ -2035,6 +2120,7 @@ Expected: все 9 URL возвращают `HTTP/2 200`.
 - `docs/EASTER-EGGS.md` гайд
 
 **Out (Animation Pass / M4 / M5):**
+
 - Любые scroll-driven, scroll-reveal, parallax анимации
 - Astro View Transitions (page-to-page wipes)
 - Motion One библиотека и stagger-эффекты

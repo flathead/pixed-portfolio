@@ -1,7 +1,8 @@
 ---
 import { SITE, NAV_LINKS } from '../../lib/site-config';
 import LangSwitcher from './LangSwitcher.astro';
-import ThemeTweakerBtn from './ThemeTweakerBtn.astro';
+import ThemeTweaker from '../islands/ThemeTweaker.svelte';
+import LogoGlitch from '../islands/LogoGlitch.svelte';
 
 const currentPath = Astro.url.pathname;
 
@@ -13,7 +14,7 @@ function isActive(href: string): boolean {
 
 <header class="header">
   <div class="container header__inner">
-    <a href="/" class="header__brand">[ {SITE.author}.dev ]</a>
+    <LogoGlitch client:visible href="/" text={`${SITE.author}.dev`} />
 
     <nav class="header__nav" aria-label="Main">
       <ul class="header__list">
@@ -34,7 +35,7 @@ function isActive(href: string): boolean {
 
     <div class="header__tools">
       <LangSwitcher />
-      <ThemeTweakerBtn />
+      <ThemeTweaker client:visible />
     </div>
   </div>
 </header>
@@ -57,16 +58,6 @@ function isActive(href: string): boolean {
     justify-content: space-between;
     padding: $space-3 0;
     gap: $space-5;
-  }
-
-  .header__brand {
-    font-family: var(--font-display);
-    font-size: $text-xs;
-    color: var(--green);
-    letter-spacing: $tracking-pixel;
-    text-transform: uppercase;
-    text-decoration: none;
-    white-space: nowrap;
   }
 
   .header__list {
